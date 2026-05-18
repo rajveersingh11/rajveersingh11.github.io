@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — Rajveer Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/projects.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="page-wrapper">
+
+    <section class="page-hero section">
+      <span class="section-tag reveal">// My Work</span>
+      <h1 class="section-title reveal delay-1">Featured <em>Projects</em></h1>
+      <p class="section-desc reveal delay-2">AI systems, ML pipelines, and intelligent applications built with purpose.</p>
+      <div class="divider reveal delay-2" style="margin:1.25rem 0 0;"></div>
+    </section>
+
+    <!-- ══════════════════ FILTER BAR ══════════════════════ -->
+    <section class="section" style="padding-top:0;" aria-label="Project filters">
+      <div class="filter-bar reveal">
+        <!-- Search -->
+        <div class="search-wrap">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="project-search" class="search-input" placeholder="Search projects..." aria-label="Search projects" />
+        </div>
+        <!-- Tag filters -->
+        <div class="filter-tags" role="group" aria-label="Filter by type">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="ai">AI/ML</button>
+          <button class="filter-btn" data-filter="api">API</button>
+          <button class="filter-btn" data-filter="mlops">MLOps</button>
+          <button class="filter-btn" data-filter="cv">Computer Vision</button>
+          <button class="filter-btn" data-filter="web">Web</button>
+        </div>
+        <!-- Status filter -->
+        <div class="filter-tags" role="group" aria-label="Filter by status">
+          <button class="filter-btn status-btn active" data-status="all">All Status</button>
+          <button class="filter-btn status-btn" data-status="completed">Completed</button>
+          <button class="filter-btn status-btn" data-status="inprogress">In Progress</button>
+        </div>
+      </div>
+
+      <!-- Results count -->
+      <p class="results-count reveal" id="results-count" aria-live="polite">Showing <span id="count-num">3</span> projects</p>
+    </section>
+
+    <!-- ══════════════════ PROJECTS GRID ════════════════════ -->
+    <section class="section" style="padding-top:0;" aria-label="Projects grid">
+      <div class="projects-grid" id="projects-grid">
+
+        <!-- ── Project 1: RAG Privacy Guard ───────────── -->
+        <article class="project-card card card-glow" 
+          data-tags="ai,api" data-status="completed"
+          data-title="RAG Privacy Guard"
+          data-langs="Python,LangChain,ChromaDB,OpenAI"
+          aria-label="RAG Privacy Guard project">
+          <div class="pc-image">
+            <!-- Place image at ../images/projects/rag-privacy.jpg -->
+            <div class="pc-img-placeholder" style="background: linear-gradient(135deg,#060f1e,#0e2a3e);">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,255,0.35)" stroke-width="1"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="pc-badges">
+              <span class="tag">Python</span>
+              <span class="tag tag-green">LangChain</span>
+            </div>
+            <div class="pc-overlay">
+              <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+                GitHub →
+              </a>
+              <button class="btn btn-ghost btn-sm" disabled title="Live preview not available">
+                Preview (N/A)
+              </button>
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-meta">
+              <span class="tag tag-green">✓ Completed</span>
+              <div class="pc-type-tags">
+                <span class="tag">AI/ML</span>
+                <span class="tag tag-orange">API</span>
+              </div>
+            </div>
+            <h3 class="pc-title">RAG Privacy Guard</h3>
+            <p class="pc-desc">Privacy-aware RAG system that automatically detects and masks PII (names, emails, IDs) from documents before ingestion into the vector store, preventing sensitive data leakage through LLM responses.</p>
+            <div class="pc-details">
+              <div class="pc-detail-item">
+                <span class="pd-label">Architecture:</span>
+                <span class="pd-val">LangChain → PII Scrubber → ChromaDB → GPT Q&A</span>
+              </div>
+              <div class="pc-detail-item">
+                <span class="pd-label">Compliance:</span>
+                <span class="pd-val">GDPR / HIPAA ready</span>
+              </div>
+            </div>
+            <div class="pc-langs">
+              <span class="mono-label" style="font-size:0.7rem;">STACK:</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">LangChain</span>
+              <span class="skill-tag">ChromaDB</span>
+              <span class="skill-tag">OpenAI API</span>
+              <span class="skill-tag">FastAPI</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── Project 2: DLOps Pipeline ──────────────── -->
+        <article class="project-card card card-glow"
+          data-tags="ai,mlops" data-status="completed"
+          data-title="DLOps ML Pipeline"
+          data-langs="Python,PyTorch,Docker,MLflow,CI/CD">
+          <div class="pc-image">
+            <div class="pc-img-placeholder" style="background: linear-gradient(135deg,#060f0c,#0e2a1e);">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(0,255,159,0.35)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <div class="pc-badges">
+              <span class="tag">PyTorch</span>
+              <span class="tag tag-green">Docker</span>
+            </div>
+            <div class="pc-overlay">
+              <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-outline btn-sm">GitHub →</a>
+              <button class="btn btn-ghost btn-sm" disabled>Preview (N/A)</button>
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-meta">
+              <span class="tag tag-green">✓ Completed</span>
+              <div class="pc-type-tags">
+                <span class="tag">MLOps</span>
+                <span class="tag">AI/ML</span>
+              </div>
+            </div>
+            <h3 class="pc-title">DLOps End-to-End ML Pipeline</h3>
+            <p class="pc-desc">Production-grade deep learning operations pipeline covering experiment tracking with MLflow, Docker containerization, automated CI/CD deployment workflows, model versioning, and inference serving via REST API.</p>
+            <div class="pc-details">
+              <div class="pc-detail-item">
+                <span class="pd-label">Pipeline:</span>
+                <span class="pd-val">Ingest → Train → Evaluate → Package → Deploy</span>
+              </div>
+              <div class="pc-detail-item">
+                <span class="pd-label">Impact:</span>
+                <span class="pd-val">Reduced deployment cycle time significantly</span>
+              </div>
+            </div>
+            <div class="pc-langs">
+              <span class="mono-label" style="font-size:0.7rem;">STACK:</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">PyTorch</span>
+              <span class="skill-tag">MLflow</span>
+              <span class="skill-tag">Docker</span>
+              <span class="skill-tag">REST API</span>
+              <span class="skill-tag">CI/CD</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── Project 3: Micro-Expression ────────────── -->
+        <article class="project-card card card-glow"
+          data-tags="ai,cv" data-status="completed"
+          data-title="Real-Time Micro-Expression Analyzer"
+          data-langs="Python,TensorFlow,OpenCV,CNN">
+          <div class="pc-image">
+            <div class="pc-img-placeholder" style="background: linear-gradient(135deg,#150808,#2e1010);">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(255,107,53,0.35)" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+            </div>
+            <div class="pc-badges">
+              <span class="tag">TensorFlow</span>
+              <span class="tag tag-orange">OpenCV</span>
+            </div>
+            <div class="pc-overlay">
+              <a href="https://github.com" target="_blank" rel="noopener" class="btn btn-outline btn-sm">GitHub →</a>
+              <button class="btn btn-ghost btn-sm" disabled>Preview (N/A)</button>
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-meta">
+              <span class="tag tag-green">✓ Completed</span>
+              <div class="pc-type-tags">
+                <span class="tag">AI/ML</span>
+                <span class="tag">Computer Vision</span>
+              </div>
+            </div>
+            <h3 class="pc-title">Real-Time Micro-Expression Analyzer</h3>
+            <p class="pc-desc">Real-time facial micro-expression detection system using CNN-based classifiers with transfer learning achieving 87% accuracy on FER-2013. Benchmarked across 3 datasets; RAF-DB model outperformed baseline by 12%.</p>
+            <div class="pc-details">
+              <div class="pc-detail-item">
+                <span class="pd-label">Accuracy:</span>
+                <span class="pd-val">87% on FER-2013 | 24 FPS real-time</span>
+              </div>
+              <div class="pc-detail-item">
+                <span class="pd-label">Datasets:</span>
+                <span class="pd-val">FER-2013, RAF-DB, CK+ (7 emotion classes)</span>
+              </div>
+            </div>
+            <div class="pc-langs">
+              <span class="mono-label" style="font-size:0.7rem;">STACK:</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">TensorFlow</span>
+              <span class="skill-tag">Keras</span>
+              <span class="skill-tag">OpenCV</span>
+              <span class="skill-tag">Transfer Learning</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── Project 4: Placeholder (In Progress) ───── -->
+        <article class="project-card card card-glow"
+          data-tags="ai,api,web" data-status="inprogress"
+          data-title="AI Automation Dashboard"
+          data-langs="Python,FastAPI,React">
+          <div class="pc-image">
+            <div class="pc-img-placeholder" style="background: linear-gradient(135deg,#0c0c1e,#1a1a3d);">
+              <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="rgba(100,100,255,0.35)" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="pc-badges">
+              <span class="tag">FastAPI</span>
+              <span class="tag">React</span>
+            </div>
+            <div class="pc-overlay">
+              <button class="btn btn-ghost btn-sm" disabled>GitHub (Soon)</button>
+              <button class="btn btn-ghost btn-sm" disabled>Preview (Soon)</button>
+            </div>
+          </div>
+          <div class="pc-body">
+            <div class="pc-meta">
+              <span class="tag tag-yellow">⟳ In Progress</span>
+              <div class="pc-type-tags">
+                <span class="tag">Web</span>
+                <span class="tag tag-orange">API</span>
+              </div>
+            </div>
+            <h3 class="pc-title">AI Automation Dashboard</h3>
+            <p class="pc-desc">A full-stack dashboard for monitoring and managing ML model inference endpoints, with real-time metrics, alert configurations, and workflow automation via REST API integrations.</p>
+            <div class="pc-details">
+              <div class="pc-detail-item">
+                <span class="pd-label">Status:</span>
+                <span class="pd-val">Backend complete — frontend in progress</span>
+              </div>
+            </div>
+            <div class="pc-langs">
+              <span class="mono-label" style="font-size:0.7rem;">STACK:</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">FastAPI</span>
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Docker</span>
+            </div>
+          </div>
+        </article>
+
+      </div><!-- /projects-grid -->
+
+      <!-- No results -->
+      <div class="no-results" id="no-results" style="display:none;" aria-live="polite">
+        <div class="nr-icon">🔍</div>
+        <p>No projects match your search.</p>
+        <button class="btn btn-outline btn-sm" id="clear-search">Clear filters</button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script src="../js/components.js"></script>
+  <script src="../js/projects.js"></script>
+</body>
+</html>

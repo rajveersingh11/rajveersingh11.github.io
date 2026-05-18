@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blogs — Rajveer Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../css/main.css" /><link rel="stylesheet" href="../css/blogs.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div><div class="bg-glow" aria-hidden="true"></div>
+  <div class="page-wrapper">
+
+    <section class="page-hero section">
+      <span class="section-tag reveal">// Thoughts & Tutorials</span>
+      <h1 class="section-title reveal delay-1">The AI/ML <em>Blog</em></h1>
+      <p class="section-desc reveal delay-2">Deep dives, tutorials, and insights on building real-world AI systems.</p>
+      <div class="divider reveal delay-2" style="margin:1.25rem 0 0;"></div>
+    </section>
+
+    <!-- Blog Filter -->
+    <section class="section" style="padding-top:0;">
+      <div class="blog-filter reveal">
+        <button class="filter-btn active" data-cat="all">All Posts</button>
+        <button class="filter-btn" data-cat="llm">LLMs & RAG</button>
+        <button class="filter-btn" data-cat="cv">Computer Vision</button>
+        <button class="filter-btn" data-cat="mlops">MLOps</button>
+        <button class="filter-btn" data-cat="tutorial">Tutorials</button>
+      </div>
+    </section>
+
+    <!-- Featured Blog Post -->
+    <section class="section" style="padding-top:0;" aria-label="Blog posts">
+
+      <article class="blog-featured card card-glow reveal" data-cat="llm">
+        <div class="bf-img">
+          <!-- Image: ../images/blog/rag-privacy.jpg -->
+          <div class="bf-img-placeholder">
+            <div class="bf-img-overlay-text">RAG PRIVACY</div>
+          </div>
+        </div>
+        <div class="bf-body">
+          <div class="bf-meta">
+            <span class="tag">LLMs & RAG</span>
+            <span class="tag tag-green">Featured</span>
+            <span class="blog-date">October 15, 2025</span>
+          </div>
+          <h2 class="bf-title">Building a GDPR-Compliant RAG Pipeline: PII Detection Before Vector Ingestion</h2>
+          <p class="bf-excerpt">Most RAG tutorials skip a critical production concern: what happens when sensitive documents enter your vector database? In this deep dive, I walk through building an automated PII scrubbing layer using spaCy NER that intercepts documents before they're embedded and stored — preventing names, emails, and medical IDs from surfacing in LLM responses.</p>
+          <div class="bf-footer">
+            <div class="bf-tags">
+              <span class="skill-tag">Python</span><span class="skill-tag">LangChain</span><span class="skill-tag">spaCy</span><span class="skill-tag">ChromaDB</span>
+            </div>
+            <div class="bf-actions">
+              <span class="read-time">8 min read</span>
+              <a href="#" class="btn btn-outline btn-sm">Read Post →</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Blog Grid -->
+      <div class="blogs-grid" id="blogs-grid">
+
+        <article class="blog-card card card-glow reveal" data-cat="cv">
+          <div class="bc-img">
+            <div class="bc-img-placeholder" style="background:linear-gradient(135deg,#150808,#2e1010);">
+              <span class="bc-topic">EMOTIONS</span>
+            </div>
+          </div>
+          <div class="bc-body">
+            <div class="bc-meta">
+              <span class="tag tag-orange">Computer Vision</span>
+              <span class="blog-date">September 8, 2025</span>
+            </div>
+            <h3 class="bc-title">87% Accuracy on FER-2013: Transfer Learning Tricks That Actually Work</h3>
+            <p class="bc-excerpt">A practical walkthrough of the hyperparameter choices, augmentation strategies, and architecture decisions that pushed my micro-expression classifier past the 85% barrier.</p>
+            <div class="bc-footer">
+              <span class="read-time">6 min read</span>
+              <a href="#" class="btn btn-ghost btn-sm">Read →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="blog-card card card-glow reveal delay-1" data-cat="mlops">
+          <div class="bc-img">
+            <div class="bc-img-placeholder" style="background:linear-gradient(135deg,#060f0c,#0d201e);">
+              <span class="bc-topic">MLOPS</span>
+            </div>
+          </div>
+          <div class="bc-body">
+            <div class="bc-meta">
+              <span class="tag tag-green">MLOps</span>
+              <span class="blog-date">August 20, 2025</span>
+            </div>
+            <h3 class="bc-title">From Notebook to Production: Containerizing ML Models with Docker in 30 Minutes</h3>
+            <p class="bc-excerpt">A step-by-step guide to packaging your trained PyTorch model in a Docker container, exposing a FastAPI inference endpoint, and deploying to AWS EC2.</p>
+            <div class="bc-footer">
+              <span class="read-time">10 min read</span>
+              <a href="#" class="btn btn-ghost btn-sm">Read →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="blog-card card card-glow reveal delay-2" data-cat="tutorial">
+          <div class="bc-img">
+            <div class="bc-img-placeholder" style="background:linear-gradient(135deg,#0a060f,#1e1030);">
+              <span class="bc-topic">TUTORIAL</span>
+            </div>
+          </div>
+          <div class="bc-body">
+            <div class="bc-meta">
+              <span class="tag">Tutorial</span>
+              <span class="blog-date">July 5, 2025</span>
+            </div>
+            <h3 class="bc-title">MLflow From Zero: Track Every Experiment Without Losing Your Mind</h3>
+            <p class="bc-excerpt">Why MLflow is non-negotiable for ML projects and how to set it up in under 20 minutes. Covers experiment tracking, model registry, and artifact logging with real code examples.</p>
+            <div class="bc-footer">
+              <span class="read-time">7 min read</span>
+              <a href="#" class="btn btn-ghost btn-sm">Read →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="blog-card card card-glow reveal delay-1" data-cat="llm">
+          <div class="bc-img">
+            <div class="bc-img-placeholder" style="background:linear-gradient(135deg,#060e1e,#0e1e36);">
+              <span class="bc-topic">LLMs</span>
+            </div>
+          </div>
+          <div class="bc-body">
+            <div class="bc-meta">
+              <span class="tag">LLMs & RAG</span>
+              <span class="blog-date">June 12, 2025</span>
+            </div>
+            <h3 class="bc-title">LangChain Agents vs Chains: When to Use Each (With Real Examples)</h3>
+            <p class="bc-excerpt">Demystifying the confusion around LangChain's core abstractions — practical decision criteria for choosing between simple chains and autonomous agents for your AI application.</p>
+            <div class="bc-footer">
+              <span class="read-time">5 min read</span>
+              <a href="#" class="btn btn-ghost btn-sm">Read →</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- No results -->
+      <div id="no-blogs" style="display:none;" class="no-results">
+        <div class="nr-icon">📝</div>
+        <p>No posts in this category yet.</p>
+      </div>
+
+    </section>
+
+    <!-- Newsletter CTA -->
+    <section class="section newsletter-section">
+      <div class="newsletter-card card reveal">
+        <div class="nl-icon">📬</div>
+        <h3>Get Notified on New Posts</h3>
+        <p>Quality AI/ML content — no spam. New posts every 2–3 weeks.</p>
+        <div class="nl-form">
+          <input type="email" class="form-input nl-input" placeholder="your@email.com" aria-label="Email for newsletter" />
+          <button class="btn btn-primary" id="nl-btn">Subscribe</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script src="../js/components.js"></script>
+  <script src="../js/blogs.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* ============================================================
+   ACHIEVEMENTS.CSS
+   ============================================================ */
+.page-hero { padding-bottom: 2rem; }
+.page-hero .section-title { text-align: left; }
+
+/* Certs Grid */
+.certs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+
+.cert-card { display: flex; flex-direction: column; overflow: hidden; }
+
+.cert-img-wrap { position: relative; height: 160px; overflow: hidden; }
+.cert-img-placeholder {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #060e1e, #0e1e36);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem;
+  transition: transform 0.4s ease;
+}
+.cert-card:hover .cert-img-placeholder { transform: scale(1.04); }
+.cert-img-placeholder img { width: 100%; height: 100%; object-fit: cover; }
+.cip-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3); letter-spacing: 1px; }
+.cert-overlay {
+  position: absolute; inset: 0; background: rgba(5,10,15,0.82);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity var(--transition);
+}
+.cert-card:hover .cert-overlay { opacity: 1; }
+
+.cert-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+.cert-issuer { display: flex; align-items: center; justify-content: space-between; }
+.ci-badge {
+  font-family: var(--font-mono); font-size: 0.7rem;
+  padding: 0.2rem 0.6rem; border-radius: 100px;
+  background: rgba(0,212,255,0.08); color: var(--accent);
+  border: 1px solid rgba(0,212,255,0.2);
+}
+.ci-badge.ci-green { background: rgba(0,255,159,0.08); color: var(--accent2); border-color: rgba(0,255,159,0.2); }
+.ci-badge.ci-orange { background: rgba(255,107,53,0.08); color: var(--accent3); border-color: rgba(255,107,53,0.2); }
+.cert-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text3); }
+.cert-title { font-family: var(--font-display); font-size: 1.05rem; color: var(--white); line-height: 1.35; }
+.cert-desc { color: var(--text2); font-size: 0.85rem; line-height: 1.7; flex: 1; }
+.cert-skills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+/* Hackathons */
+.hackathons-list { display: flex; flex-direction: column; gap: 1.25rem; }
+.hackathon-item { display: flex; gap: 2rem; padding: 1.75rem; align-items: flex-start; }
+.hack-left { flex-shrink: 0; text-align: center; min-width: 100px; }
+.hack-rank { font-size: 1.3rem; margin-bottom: 0.4rem; white-space: nowrap; }
+.hack-org { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text3); letter-spacing: 0.5px; text-align: center; }
+.hack-middle { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
+.hack-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--white); }
+.hack-desc { color: var(--text2); font-size: 0.88rem; line-height: 1.75; }
+.hack-stack { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.hack-right { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem; }
+.hack-date { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent); }
+
+@media (max-width: 768px) {
+  .certs-grid { grid-template-columns: 1fr; }
+  .hackathon-item { flex-direction: column; gap: 1rem; }
+  .hack-right { align-items: flex-start; }
+}
