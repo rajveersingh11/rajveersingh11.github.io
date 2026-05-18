@@ -1,6 +1,5 @@
 /* ============================================================
-   GAME.JS — Guess the AI Term
-   Timer, lives, difficulty, scoring, hint, skip, review
+   GAME.JS — Guess the AI Term (Quiz with timer, lives, difficulty)
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   const { injectNavbar, injectFooter, initReveal, showToast } = window.PortfolioUtils;
@@ -8,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   injectFooter('../');
   initReveal();
 
-  // ---------- QUESTION BANK (20 questions, each with category, difficulty, hint, explanation) ----------
+  // ---------- QUESTION BANK (20 questions) ----------
   const questionBank = [
     { text: "A machine learning technique where a model learns from labeled data to predict outcomes.", options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Transfer Learning"], correct: 0, category: "Fundamentals", hint: "Think of a teacher providing correct answers during training.", explanation: "Supervised learning uses labeled datasets to train models to classify data or predict outcomes." },
     { text: "When a model performs well on training data but poorly on unseen data, it's called ___ .", options: ["Underfitting", "Overfitting", "Bias", "Variance"], correct: 1, category: "Model Evaluation", hint: "The model memorized the training data too well.", explanation: "Overfitting happens when a model learns noise and details too specifically, losing generalization." },
@@ -32,11 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     { text: "The practice of automatically adjusting a model's hyperparameters to improve performance.", options: ["Hyperparameter Tuning", "Gradient Descent", "Backpropagation", "Ensemble Learning"], correct: 0, category: "Optimization", hint: "Searching for the best settings like learning rate.", explanation: "Techniques include grid search, random search, and Bayesian optimization." }
   ];
 
-  // Difficulty multipliers and time limits
+  // Difficulty settings
   const difficultySettings = {
-    easy: { timeSec: 45, pointsCorrect: 10, speedBonus: 0.2, lives: 5 },
+    easy:   { timeSec: 45, pointsCorrect: 10, speedBonus: 0.2, lives: 5 },
     medium: { timeSec: 30, pointsCorrect: 20, speedBonus: 0.5, lives: 3 },
-    hard: { timeSec: 20, pointsCorrect: 30, speedBonus: 1.0, lives: 2 }
+    hard:   { timeSec: 20, pointsCorrect: 30, speedBonus: 1.0, lives: 2 }
   };
 
   let currentDifficulty = 'medium';
@@ -51,8 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let timerInterval = null;
   let answerLocked = false;
   let gameActive = false;
-  let selectedQuestions = []; // filtered by difficulty (all 20 but difficulty affects scoring)
-  let missedQuestions = []; // store { term, correctAnswer, explanation }
+  let selectedQuestions = [];
+  let missedQuestions = [];
 
   // DOM elements
   const screens = {
@@ -62,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     gameover: document.getElementById('screen-gameover')
   };
 
-  // Helper: update HUD
   function updateHUD() {
     document.getElementById('hud-score').innerText = score;
     document.getElementById('hud-qnum').innerText = currentQuestionIndex + 1;
@@ -70,12 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let hearts = '';
     for (let i=0; i<lives; i++) hearts += '❤️ ';
     document.getElementById('hud-lives').innerHTML = hearts.trim() || '💀';
-    // Progress bar
     const progress = ((currentQuestionIndex) / selectedQuestions.length) * 100;
     document.getElementById('q-progress').style.width = `${progress}%`;
   }
 
-  // Stop timer
   function stopTimer() {
     if (timerInterval) {
       clearInterval(timerInterval);
@@ -83,31 +79,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Start timer for current question
   function startTimer() {
     stopTimer();
     const settings = difficultySettings[currentDifficulty];
     timeLeft = settings.timeSec;
-    document.getElementById('timer-num').innerText = timeLeft;
-    const ring = document.getElementById('timer-ring');
-    const circumference = 2 * Math.PI * 26; // ~163.36
-    ring.style.strokeDasharray = circumference;
-    ring.style.strokeDashoffset = 0;
+    const timerNum = document.getElementById('timer-num');
+    const timerRing = document.getElementById('timer-ring');
+    const circumference = 2 * Math.PI * 26;
+    timerRing.style.strokeDasharray = circumference;
+    timerRing.style.strokeDashoffset = 0;
+    timerNum.innerText = timeLeft;
+    timerNum.classList.remove('warn', 'danger');
+    timerRing.classList.remove('warn', 'danger');
 
     timerInterval = setInterval(() => {
       if (!gameActive || answerLocked) return;
       if (timeLeft <= 1) {
-        // Time's up => wrong answer
         clearInterval(timerInterval);
         timerInterval = null;
-        if (!answerLocked) {
-          handleTimeout();
-        }
+        if (!answerLocked) handleTimeout();
       } else {
         timeLeft--;
-        document.getElementById('timer-num').innerText = timeLeft;
+        timerNum.innerText = timeLeft;
         const offset = circumference * (1 - timeLeft / settings.timeSec);
-        ring.style.strokeDashoffset = offset;
+        timerRing.style.strokeDashoffset = offset;
+        // Update warning classes
+        if (timeLeft <= 5) {
+          timerNum.classList.add('danger');
+          timerRing.classList.add('danger');
+        } else if (timeLeft <= 10) {
+          timerNum.classList.add('warn');
+          timerRing.classList.add('warn');
+        }
       }
     }, 1000);
   }
@@ -116,21 +119,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (answerLocked) return;
     answerLocked = true;
     stopTimer();
-    // Mark as wrong
-    const currentQ = selectedQuestions[currentQuestionIndex];
     wrongAnswers++;
     lives--;
     streak = 0;
     updateHUD();
-
-    // Show feedback without points
-    showFeedback(false, currentQ, 0);
-    if (lives <= 0) {
-      endGame();
-    }
+    const currentQ = selectedQuestions[currentQuestionIndex];
+    missedQuestions.push({
+      term: currentQ.options[currentQ.correct],
+      correctAnswer: currentQ.options[currentQ.correct],
+      explanation: currentQ.explanation,
+      userAnswer: "Time's up"
+    });
+    showFeedback(false, currentQ, 0, 'timeout');
+    if (lives <= 0) endGame();
   }
 
-  // Load current question UI
   function loadQuestion() {
     answerLocked = false;
     const q = selectedQuestions[currentQuestionIndex];
@@ -139,19 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('q-diff-badge').innerText = currentDifficulty.toUpperCase();
     document.getElementById('q-hint').style.display = 'none';
     document.getElementById('q-hint-text').innerText = q.hint;
+    // Clear previous hint flag
+    window.hintUsedForCurrent = false;
 
-    // Render options
     const container = document.getElementById('options-grid');
     container.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
     q.options.forEach((opt, idx) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.innerText = opt;
+      btn.innerHTML = `<span class="option-letter">${letters[idx]}</span>${opt}`;
       btn.dataset.idx = idx;
       btn.addEventListener('click', () => handleAnswer(idx));
       container.appendChild(btn);
     });
-
     updateHUD();
     startTimer();
   }
@@ -166,9 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const settings = difficultySettings[currentDifficulty];
 
     if (isCorrect) {
-      // Base points
       pointsEarned = settings.pointsCorrect;
-      // Speed bonus: remaining time fraction * speedBonus multiplier
       const timeBonus = Math.floor((timeLeft / settings.timeSec) * settings.speedBonus * settings.pointsCorrect);
       pointsEarned += timeBonus;
       score += pointsEarned;
@@ -179,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
       wrongAnswers++;
       lives--;
       streak = 0;
-      // Store missed question for review
       missedQuestions.push({
         term: currentQ.options[currentQ.correct],
         correctAnswer: currentQ.options[currentQ.correct],
@@ -187,53 +188,49 @@ document.addEventListener('DOMContentLoaded', () => {
         userAnswer: currentQ.options[selectedIdx]
       });
     }
-
     updateHUD();
 
-    // Visual feedback on options (highlight correct/incorrect)
+    // Visual feedback
     const allBtns = document.querySelectorAll('.option-btn');
     allBtns.forEach((btn, idx) => {
       btn.disabled = true;
-      if (idx === currentQ.correct) {
-        btn.classList.add('correct');
-      }
-      if (idx === selectedIdx && idx !== currentQ.correct) {
-        btn.classList.add('wrong');
-      }
+      if (idx === currentQ.correct) btn.classList.add('correct');
+      if (idx === selectedIdx && idx !== currentQ.correct) btn.classList.add('wrong');
     });
-
     showFeedback(isCorrect, currentQ, pointsEarned);
-
-    if (lives <= 0) {
-      endGame();
-    }
+    if (lives <= 0) endGame();
   }
 
-  function showFeedback(isCorrect, question, points) {
+  function showFeedback(isCorrect, question, points, reason = '') {
     screens.game.classList.add('hidden');
-    const fbScreen = screens.feedback;
-    fbScreen.classList.remove('hidden');
-
+    screens.feedback.classList.remove('hidden');
     const iconEl = document.getElementById('fb-icon');
     const resultText = document.getElementById('fb-result-text');
     const termDiv = document.getElementById('fb-term');
     const explDiv = document.getElementById('fb-explanation');
     const pointsDiv = document.getElementById('fb-points');
 
-    if (isCorrect) {
+    if (reason === 'timeout') {
+      iconEl.innerHTML = '⏰';
+      resultText.innerHTML = "Time's Up!";
+      resultText.className = 'fb-result-text timeout';
+      termDiv.innerText = `Answer: ${question.options[question.correct]}`;
+      explDiv.innerText = question.explanation;
+      pointsDiv.innerHTML = `No points · You lost a life ❤️`;
+    } else if (isCorrect) {
       iconEl.innerHTML = '✓';
-      iconEl.style.background = 'rgba(0,255,159,0.1)';
-      resultText.innerText = 'Correct!';
+      resultText.innerHTML = 'Correct!';
+      resultText.className = 'fb-result-text correct';
       termDiv.innerText = question.options[question.correct];
       explDiv.innerText = question.explanation;
-      pointsDiv.innerText = `+${points} points (${points - difficultySettings[currentDifficulty].pointsCorrect} time bonus)`;
+      pointsDiv.innerHTML = `<span>+${points}</span> points (including speed bonus)`;
     } else {
       iconEl.innerHTML = '✗';
-      iconEl.style.background = 'rgba(255,71,87,0.1)';
-      resultText.innerText = 'Wrong!';
-      termDiv.innerText = `Correct answer: ${question.options[question.correct]}`;
+      resultText.innerHTML = 'Wrong!';
+      resultText.className = 'fb-result-text wrong';
+      termDiv.innerText = `Correct: ${question.options[question.correct]}`;
       explDiv.innerText = question.explanation;
-      pointsDiv.innerText = `You lost a life ❤️`;
+      pointsDiv.innerHTML = `You lost a life ❤️`;
     }
   }
 
@@ -266,18 +263,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showGameOverScreen(completed) {
-    const goScreen = screens.gameover;
-    goScreen.classList.remove('hidden');
-
+    screens.gameover.classList.remove('hidden');
     document.getElementById('sd-final-score').innerText = score;
     document.getElementById('sd-correct').innerText = correctAnswers;
     document.getElementById('sd-wrong').innerText = wrongAnswers;
-    const accuracy = correctAnswers + wrongAnswers === 0 ? 0 : Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+    const totalAttempts = correctAnswers + wrongAnswers;
+    const accuracy = totalAttempts === 0 ? 0 : Math.round((correctAnswers / totalAttempts) * 100);
     document.getElementById('sd-accuracy').innerText = `${accuracy}%`;
     document.getElementById('sd-best-streak').innerText = bestStreak;
 
-    // Rank badge
-    const rankEl = document.getElementById('rank-badge');
     let rankIcon, rankTitle, rankSub;
     if (score >= 350) {
       rankIcon = '🏆'; rankTitle = 'AI Master'; rankSub = 'You know your stuff!';
@@ -292,7 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('rb-title').innerText = rankTitle;
     document.getElementById('rb-sub').innerText = rankSub;
 
-    // Missed questions
     const missedDiv = document.getElementById('missed-section');
     const missedList = document.getElementById('missed-list');
     if (missedQuestions.length > 0) {
@@ -301,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
       missedQuestions.forEach(m => {
         const item = document.createElement('div');
         item.className = 'missed-item';
-        item.innerHTML = `<span class="missed-term">${m.term}</span><span class="missed-correct">${m.explanation.substring(0, 60)}...</span>`;
+        item.innerHTML = `<div class="mi-term">${m.term}</div><div class="mi-def">${m.explanation.substring(0, 100)}${m.explanation.length > 100 ? '…' : ''}</div>`;
         missedList.appendChild(item);
       });
     } else {
@@ -322,32 +315,21 @@ document.addEventListener('DOMContentLoaded', () => {
     missedQuestions = [];
     answerLocked = false;
     gameActive = true;
-
-    // Use all questions, difficulty affects only scoring and time
     selectedQuestions = [...questionBank];
-    // Shuffle for variety
+    // Shuffle
     for (let i = selectedQuestions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
     }
-    // Take first 20 (if more than 20, but we have exactly 20)
-    selectedQuestions = selectedQuestions.slice(0, 20);
-
-    // Switch to game screen
     screens.start.classList.add('hidden');
     screens.game.classList.remove('hidden');
     screens.feedback.classList.add('hidden');
     screens.gameover.classList.add('hidden');
-
     loadQuestion();
   }
 
   // Event listeners
-  document.getElementById('btn-start').addEventListener('click', () => {
-    startGame(currentDifficulty);
-  });
-
-  // Difficulty selection
+  document.getElementById('btn-start').addEventListener('click', () => startGame(currentDifficulty));
   document.querySelectorAll('.ds-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.ds-btn').forEach(b => b.classList.remove('active'));
@@ -355,36 +337,34 @@ document.addEventListener('DOMContentLoaded', () => {
       currentDifficulty = btn.dataset.diff;
     });
   });
-
   document.getElementById('btn-next').addEventListener('click', nextQuestion);
   document.getElementById('btn-restart').addEventListener('click', () => {
     screens.gameover.classList.add('hidden');
     screens.start.classList.remove('hidden');
-    // Reset game state
     gameActive = false;
     stopTimer();
   });
-
-  // Hint toggle
-  let hintUsed = false;
-  document.getElementById('btn-hint-toggle').addEventListener('click', () => {
-    if (answerLocked || !gameActive) return;
-    if (!hintUsed) {
-      document.getElementById('q-hint').style.display = 'flex';
-      // Deduct points penalty
-      score = Math.max(0, score - 5);
-      updateHUD();
-      hintUsed = true;
-      showToast('Hint revealed: -5 points', 'info');
-    }
+  document.getElementById('btn-play-again')?.addEventListener('click', () => {
+    screens.gameover.classList.add('hidden');
+    screens.start.classList.remove('hidden');
   });
 
-  // Skip button: lose 10 points, move to next question (counts as wrong)
+  // Hint toggle
+  document.getElementById('btn-hint-toggle').addEventListener('click', () => {
+    if (answerLocked || !gameActive) return;
+    const hintDiv = document.getElementById('q-hint');
+    if (hintDiv.style.display === 'flex') return;
+    hintDiv.style.display = 'flex';
+    score = Math.max(0, score - 5);
+    updateHUD();
+    showToast('💡 Hint revealed: -5 points', 'info');
+  });
+
+  // Skip button
   document.getElementById('btn-skip').addEventListener('click', () => {
     if (answerLocked || !gameActive) return;
     answerLocked = true;
     stopTimer();
-    // Penalty: -10 points
     score = Math.max(0, score - 10);
     wrongAnswers++;
     streak = 0;
@@ -400,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lives <= 0) endGame();
   });
 
-  // Share score
+  // Share button
   document.getElementById('btn-share').addEventListener('click', () => {
     const text = `I scored ${score} points in the Guess the AI Term quiz! Can you beat me? 🧠`;
     if (navigator.share) {
