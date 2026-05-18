@@ -1,0 +1,413 @@
+/* ============================================================
+   GAME.JS — Guess the AI Term
+   Timer, lives, difficulty, scoring, hint, skip, review
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const { injectNavbar, injectFooter, initReveal, showToast } = window.PortfolioUtils;
+  injectNavbar('../');
+  injectFooter('../');
+  initReveal();
+
+  // ---------- QUESTION BANK (20 questions, each with category, difficulty, hint, explanation) ----------
+  const questionBank = [
+    { text: "A machine learning technique where a model learns from labeled data to predict outcomes.", options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Transfer Learning"], correct: 0, category: "Fundamentals", hint: "Think of a teacher providing correct answers during training.", explanation: "Supervised learning uses labeled datasets to train models to classify data or predict outcomes." },
+    { text: "When a model performs well on training data but poorly on unseen data, it's called ___ .", options: ["Underfitting", "Overfitting", "Bias", "Variance"], correct: 1, category: "Model Evaluation", hint: "The model memorized the training data too well.", explanation: "Overfitting happens when a model learns noise and details too specifically, losing generalization." },
+    { text: "Which neural network architecture is best suited for image recognition tasks?", options: ["RNN", "LSTM", "CNN", "GAN"], correct: 2, category: "Deep Learning", hint: "It uses convolution layers to detect spatial hierarchies.", explanation: "Convolutional Neural Networks (CNNs) are designed to process grid-like data like images." },
+    { text: "The framework that helps build LLM applications with chains, agents, and memory is called ___ .", options: ["TensorFlow", "PyTorch", "LangChain", "Hugging Face"], correct: 2, category: "LLM Tools", hint: "It's named after 'language chains'.", explanation: "LangChain is the most popular framework for composing LLMs into applications." },
+    { text: "What does RAG stand for in AI?", options: ["Recursive Attention Graph", "Retrieval-Augmented Generation", "Reinforced Adaptive Gradient", "Random Access Generator"], correct: 1, category: "LLM Techniques", hint: "It combines document retrieval with text generation.", explanation: "RAG retrieves relevant documents from a knowledge base and uses them to ground LLM responses." },
+    { text: "Which algorithm is used to reduce dimensionality while preserving most variance?", options: ["PCA", "t-SNE", "LDA", "K-Means"], correct: 0, category: "Data Science", hint: "It stands for Principal Component Analysis.", explanation: "PCA transforms features into orthogonal components ordered by variance explained." },
+    { text: "A technique that randomly turns off neurons during training to prevent overfitting.", options: ["Dropout", "BatchNorm", "Early Stopping", "Regularization"], correct: 0, category: "Deep Learning", hint: "It 'drops' units randomly.", explanation: "Dropout forces the network to learn redundant representations, improving generalization." },
+    { text: "Which generative model uses a generator and discriminator in a competitive process?", options: ["VAE", "GAN", "Diffusion Model", "Autoencoder"], correct: 1, category: "Generative AI", hint: "It's a two-player game between a forger and a detective.", explanation: "Generative Adversarial Networks (GANs) learn to create realistic data by competing." },
+    { text: "The measure of how well a model's predictions match the true values.", options: ["Accuracy", "Loss", "Precision", "Recall"], correct: 0, category: "Metrics", hint: "It's the ratio of correct predictions over total.", explanation: "Accuracy = (TP+TN)/(TP+TN+FP+FN)." },
+    { text: "An algorithm that finds the optimal policy by maximizing cumulative reward.", options: ["Q-Learning", "Linear Regression", "KNN", "Decision Tree"], correct: 0, category: "Reinforcement Learning", hint: "It learns a value function for state-action pairs.", explanation: "Q-Learning is a model-free RL algorithm that learns the value of actions in states." },
+    { text: "What is the main purpose of a confusion matrix?", options: ["Visualize misclassifications", "Reduce overfitting", "Speed up training", "Augment data"], correct: 0, category: "Evaluation", hint: "It shows where your classifier gets confused.", explanation: "A confusion matrix breaks down correct and incorrect predictions by class." },
+    { text: "Which technique involves starting from a pre-trained model and training further on a specific task?", options: ["Transfer Learning", "Fine-tuning", "Zero-shot", "Few-shot"], correct: 1, category: "Deep Learning", hint: "It's like refining a general model for a specialized job.", explanation: "Fine-tuning adjusts pre-trained weights on a new dataset, usually with a lower learning rate." },
+    { text: "What does 'LLM' stand for?", options: ["Large Language Model", "Low-Level Machine", "Linear Logic Module", "Latent Learning Model"], correct: 0, category: "LLM Basics", hint: "It's the model behind ChatGPT.", explanation: "Large Language Models (LLMs) are neural networks with billions of parameters trained on text." },
+    { text: "Which library is best known for deep learning with dynamic computation graphs?", options: ["TensorFlow", "PyTorch", "Keras", "JAX"], correct: 1, category: "Frameworks", hint: "It's popular in research due to Pythonic debugging.", explanation: "PyTorch uses define-by-run graphs, making it intuitive for research." },
+    { text: "The process of converting text into numerical vectors is called ___ .", options: ["Tokenization", "Embedding", "Vectorization", "Normalization"], correct: 1, category: "NLP", hint: "Words become dense vectors in a continuous space.", explanation: "Word embeddings like Word2Vec or GloVe map words to fixed-length vectors." },
+    { text: "A metric used for imbalanced classification that averages precision and recall.", options: ["F1 Score", "AUC-ROC", "Log Loss", "R2 Score"], correct: 0, category: "Metrics", hint: "It's the harmonic mean of precision and recall.", explanation: "F1 score is useful when false positives and false negatives have different costs." },
+    { text: "Which algorithm is used for clustering without labels?", options: ["K-Means", "SVM", "Linear Regression", "XGBoost"], correct: 0, category: "Unsupervised", hint: "It partitions data into K groups based on centroids.", explanation: "K-Means is an iterative centroid-based clustering algorithm." },
+    { text: "A type of neural network well-suited for sequential data like time series.", options: ["CNN", "RNN", "MLP", "Autoencoder"], correct: 1, category: "Deep Learning", hint: "It has recurrent connections that loop back.", explanation: "Recurrent Neural Networks (RNNs) maintain a hidden state across time steps." },
+    { text: "What does 'GPU' stand for in AI hardware?", options: ["General Processing Unit", "Graphics Processing Unit", "Gradient Parallel Unit", "Generative Program Unit"], correct: 1, category: "Hardware", hint: "Originally made for rendering graphics, now accelerates matrix math.", explanation: "GPUs massively parallelize tensor operations, speeding up deep learning." },
+    { text: "The practice of automatically adjusting a model's hyperparameters to improve performance.", options: ["Hyperparameter Tuning", "Gradient Descent", "Backpropagation", "Ensemble Learning"], correct: 0, category: "Optimization", hint: "Searching for the best settings like learning rate.", explanation: "Techniques include grid search, random search, and Bayesian optimization." }
+  ];
+
+  // Difficulty multipliers and time limits
+  const difficultySettings = {
+    easy: { timeSec: 45, pointsCorrect: 10, speedBonus: 0.2, lives: 5 },
+    medium: { timeSec: 30, pointsCorrect: 20, speedBonus: 0.5, lives: 3 },
+    hard: { timeSec: 20, pointsCorrect: 30, speedBonus: 1.0, lives: 2 }
+  };
+
+  let currentDifficulty = 'medium';
+  let currentQuestionIndex = 0;
+  let score = 0;
+  let lives = 3;
+  let streak = 0;
+  let bestStreak = 0;
+  let correctAnswers = 0;
+  let wrongAnswers = 0;
+  let timeLeft = 30;
+  let timerInterval = null;
+  let answerLocked = false;
+  let gameActive = false;
+  let selectedQuestions = []; // filtered by difficulty (all 20 but difficulty affects scoring)
+  let missedQuestions = []; // store { term, correctAnswer, explanation }
+
+  // DOM elements
+  const screens = {
+    start: document.getElementById('screen-start'),
+    game: document.getElementById('screen-game'),
+    feedback: document.getElementById('screen-feedback'),
+    gameover: document.getElementById('screen-gameover')
+  };
+
+  // Helper: update HUD
+  function updateHUD() {
+    document.getElementById('hud-score').innerText = score;
+    document.getElementById('hud-qnum').innerText = currentQuestionIndex + 1;
+    document.getElementById('hud-streak').innerHTML = `${streak}🔥`;
+    let hearts = '';
+    for (let i=0; i<lives; i++) hearts += '❤️ ';
+    document.getElementById('hud-lives').innerHTML = hearts.trim() || '💀';
+    // Progress bar
+    const progress = ((currentQuestionIndex) / selectedQuestions.length) * 100;
+    document.getElementById('q-progress').style.width = `${progress}%`;
+  }
+
+  // Stop timer
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  // Start timer for current question
+  function startTimer() {
+    stopTimer();
+    const settings = difficultySettings[currentDifficulty];
+    timeLeft = settings.timeSec;
+    document.getElementById('timer-num').innerText = timeLeft;
+    const ring = document.getElementById('timer-ring');
+    const circumference = 2 * Math.PI * 26; // ~163.36
+    ring.style.strokeDasharray = circumference;
+    ring.style.strokeDashoffset = 0;
+
+    timerInterval = setInterval(() => {
+      if (!gameActive || answerLocked) return;
+      if (timeLeft <= 1) {
+        // Time's up => wrong answer
+        clearInterval(timerInterval);
+        timerInterval = null;
+        if (!answerLocked) {
+          handleTimeout();
+        }
+      } else {
+        timeLeft--;
+        document.getElementById('timer-num').innerText = timeLeft;
+        const offset = circumference * (1 - timeLeft / settings.timeSec);
+        ring.style.strokeDashoffset = offset;
+      }
+    }, 1000);
+  }
+
+  function handleTimeout() {
+    if (answerLocked) return;
+    answerLocked = true;
+    stopTimer();
+    // Mark as wrong
+    const currentQ = selectedQuestions[currentQuestionIndex];
+    wrongAnswers++;
+    lives--;
+    streak = 0;
+    updateHUD();
+
+    // Show feedback without points
+    showFeedback(false, currentQ, 0);
+    if (lives <= 0) {
+      endGame();
+    }
+  }
+
+  // Load current question UI
+  function loadQuestion() {
+    answerLocked = false;
+    const q = selectedQuestions[currentQuestionIndex];
+    document.getElementById('question-text').innerText = q.text;
+    document.getElementById('q-category').innerText = q.category;
+    document.getElementById('q-diff-badge').innerText = currentDifficulty.toUpperCase();
+    document.getElementById('q-hint').style.display = 'none';
+    document.getElementById('q-hint-text').innerText = q.hint;
+
+    // Render options
+    const container = document.getElementById('options-grid');
+    container.innerHTML = '';
+    q.options.forEach((opt, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerText = opt;
+      btn.dataset.idx = idx;
+      btn.addEventListener('click', () => handleAnswer(idx));
+      container.appendChild(btn);
+    });
+
+    updateHUD();
+    startTimer();
+  }
+
+  function handleAnswer(selectedIdx) {
+    if (answerLocked || !gameActive) return;
+    answerLocked = true;
+    stopTimer();
+    const currentQ = selectedQuestions[currentQuestionIndex];
+    const isCorrect = (selectedIdx === currentQ.correct);
+    let pointsEarned = 0;
+    const settings = difficultySettings[currentDifficulty];
+
+    if (isCorrect) {
+      // Base points
+      pointsEarned = settings.pointsCorrect;
+      // Speed bonus: remaining time fraction * speedBonus multiplier
+      const timeBonus = Math.floor((timeLeft / settings.timeSec) * settings.speedBonus * settings.pointsCorrect);
+      pointsEarned += timeBonus;
+      score += pointsEarned;
+      correctAnswers++;
+      streak++;
+      if (streak > bestStreak) bestStreak = streak;
+    } else {
+      wrongAnswers++;
+      lives--;
+      streak = 0;
+      // Store missed question for review
+      missedQuestions.push({
+        term: currentQ.options[currentQ.correct],
+        correctAnswer: currentQ.options[currentQ.correct],
+        explanation: currentQ.explanation,
+        userAnswer: currentQ.options[selectedIdx]
+      });
+    }
+
+    updateHUD();
+
+    // Visual feedback on options (highlight correct/incorrect)
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === currentQ.correct) {
+        btn.classList.add('correct');
+      }
+      if (idx === selectedIdx && idx !== currentQ.correct) {
+        btn.classList.add('wrong');
+      }
+    });
+
+    showFeedback(isCorrect, currentQ, pointsEarned);
+
+    if (lives <= 0) {
+      endGame();
+    }
+  }
+
+  function showFeedback(isCorrect, question, points) {
+    screens.game.classList.add('hidden');
+    const fbScreen = screens.feedback;
+    fbScreen.classList.remove('hidden');
+
+    const iconEl = document.getElementById('fb-icon');
+    const resultText = document.getElementById('fb-result-text');
+    const termDiv = document.getElementById('fb-term');
+    const explDiv = document.getElementById('fb-explanation');
+    const pointsDiv = document.getElementById('fb-points');
+
+    if (isCorrect) {
+      iconEl.innerHTML = '✓';
+      iconEl.style.background = 'rgba(0,255,159,0.1)';
+      resultText.innerText = 'Correct!';
+      termDiv.innerText = question.options[question.correct];
+      explDiv.innerText = question.explanation;
+      pointsDiv.innerText = `+${points} points (${points - difficultySettings[currentDifficulty].pointsCorrect} time bonus)`;
+    } else {
+      iconEl.innerHTML = '✗';
+      iconEl.style.background = 'rgba(255,71,87,0.1)';
+      resultText.innerText = 'Wrong!';
+      termDiv.innerText = `Correct answer: ${question.options[question.correct]}`;
+      explDiv.innerText = question.explanation;
+      pointsDiv.innerText = `You lost a life ❤️`;
+    }
+  }
+
+  function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex >= selectedQuestions.length || lives <= 0) {
+      if (lives <= 0) endGame();
+      else completeQuiz();
+    } else {
+      screens.feedback.classList.add('hidden');
+      screens.game.classList.remove('hidden');
+      loadQuestion();
+    }
+  }
+
+  function completeQuiz() {
+    gameActive = false;
+    stopTimer();
+    screens.feedback.classList.add('hidden');
+    screens.game.classList.add('hidden');
+    showGameOverScreen(true);
+  }
+
+  function endGame() {
+    gameActive = false;
+    stopTimer();
+    screens.feedback.classList.add('hidden');
+    screens.game.classList.add('hidden');
+    showGameOverScreen(false);
+  }
+
+  function showGameOverScreen(completed) {
+    const goScreen = screens.gameover;
+    goScreen.classList.remove('hidden');
+
+    document.getElementById('sd-final-score').innerText = score;
+    document.getElementById('sd-correct').innerText = correctAnswers;
+    document.getElementById('sd-wrong').innerText = wrongAnswers;
+    const accuracy = correctAnswers + wrongAnswers === 0 ? 0 : Math.round((correctAnswers / (correctAnswers + wrongAnswers)) * 100);
+    document.getElementById('sd-accuracy').innerText = `${accuracy}%`;
+    document.getElementById('sd-best-streak').innerText = bestStreak;
+
+    // Rank badge
+    const rankEl = document.getElementById('rank-badge');
+    let rankIcon, rankTitle, rankSub;
+    if (score >= 350) {
+      rankIcon = '🏆'; rankTitle = 'AI Master'; rankSub = 'You know your stuff!';
+    } else if (score >= 200) {
+      rankIcon = '🥈'; rankTitle = 'ML Practitioner'; rankSub = 'Solid understanding!';
+    } else if (score >= 100) {
+      rankIcon = '🥉'; rankTitle = 'AI Beginner'; rankSub = 'Keep learning!';
+    } else {
+      rankIcon = '📘'; rankTitle = 'Novice'; rankSub = 'Review the basics and try again.';
+    }
+    document.getElementById('rb-icon').innerText = rankIcon;
+    document.getElementById('rb-title').innerText = rankTitle;
+    document.getElementById('rb-sub').innerText = rankSub;
+
+    // Missed questions
+    const missedDiv = document.getElementById('missed-section');
+    const missedList = document.getElementById('missed-list');
+    if (missedQuestions.length > 0) {
+      missedDiv.style.display = 'block';
+      missedList.innerHTML = '';
+      missedQuestions.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'missed-item';
+        item.innerHTML = `<span class="missed-term">${m.term}</span><span class="missed-correct">${m.explanation.substring(0, 60)}...</span>`;
+        missedList.appendChild(item);
+      });
+    } else {
+      missedDiv.style.display = 'none';
+    }
+  }
+
+  function startGame(difficulty) {
+    currentDifficulty = difficulty;
+    const settings = difficultySettings[difficulty];
+    lives = settings.lives;
+    score = 0;
+    streak = 0;
+    bestStreak = 0;
+    correctAnswers = 0;
+    wrongAnswers = 0;
+    currentQuestionIndex = 0;
+    missedQuestions = [];
+    answerLocked = false;
+    gameActive = true;
+
+    // Use all questions, difficulty affects only scoring and time
+    selectedQuestions = [...questionBank];
+    // Shuffle for variety
+    for (let i = selectedQuestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
+    }
+    // Take first 20 (if more than 20, but we have exactly 20)
+    selectedQuestions = selectedQuestions.slice(0, 20);
+
+    // Switch to game screen
+    screens.start.classList.add('hidden');
+    screens.game.classList.remove('hidden');
+    screens.feedback.classList.add('hidden');
+    screens.gameover.classList.add('hidden');
+
+    loadQuestion();
+  }
+
+  // Event listeners
+  document.getElementById('btn-start').addEventListener('click', () => {
+    startGame(currentDifficulty);
+  });
+
+  // Difficulty selection
+  document.querySelectorAll('.ds-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ds-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentDifficulty = btn.dataset.diff;
+    });
+  });
+
+  document.getElementById('btn-next').addEventListener('click', nextQuestion);
+  document.getElementById('btn-restart').addEventListener('click', () => {
+    screens.gameover.classList.add('hidden');
+    screens.start.classList.remove('hidden');
+    // Reset game state
+    gameActive = false;
+    stopTimer();
+  });
+
+  // Hint toggle
+  let hintUsed = false;
+  document.getElementById('btn-hint-toggle').addEventListener('click', () => {
+    if (answerLocked || !gameActive) return;
+    if (!hintUsed) {
+      document.getElementById('q-hint').style.display = 'flex';
+      // Deduct points penalty
+      score = Math.max(0, score - 5);
+      updateHUD();
+      hintUsed = true;
+      showToast('Hint revealed: -5 points', 'info');
+    }
+  });
+
+  // Skip button: lose 10 points, move to next question (counts as wrong)
+  document.getElementById('btn-skip').addEventListener('click', () => {
+    if (answerLocked || !gameActive) return;
+    answerLocked = true;
+    stopTimer();
+    // Penalty: -10 points
+    score = Math.max(0, score - 10);
+    wrongAnswers++;
+    streak = 0;
+    updateHUD();
+    const currentQ = selectedQuestions[currentQuestionIndex];
+    missedQuestions.push({
+      term: currentQ.options[currentQ.correct],
+      correctAnswer: currentQ.options[currentQ.correct],
+      explanation: currentQ.explanation,
+      userAnswer: 'Skipped'
+    });
+    showFeedback(false, currentQ, 0);
+    if (lives <= 0) endGame();
+  });
+
+  // Share score
+  document.getElementById('btn-share').addEventListener('click', () => {
+    const text = `I scored ${score} points in the Guess the AI Term quiz! Can you beat me? 🧠`;
+    if (navigator.share) {
+      navigator.share({ title: 'AI Quiz Score', text });
+    } else {
+      navigator.clipboard.writeText(text);
+      showToast('Score copied to clipboard!', 'success');
+    }
+  });
+});
