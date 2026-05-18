@@ -14,6 +14,7 @@ const navLinks = [
   { href: 'achievements.html',      label: 'Achievements', page: 'achievements.html' },
   { href: 'blogs.html',             label: 'Blogs',        page: 'blogs.html' },
   { href: 'feedbacks.html',         label: 'Feedback',     page: 'feedbacks.html' },
+  { href: 'quiz.html',              label: 'AI Quiz',      page: 'quiz.html' },
   { href: 'contact.html',           label: 'Contact',      page: 'contact.html', cta: true },
 ];
 
