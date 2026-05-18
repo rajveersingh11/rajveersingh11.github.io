@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Guess the AI Term — a quiz game testing your ML knowledge. By Rajveer Singh." />
+  <title>Guess the AI Term — Rajveer Singh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/game.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="page-wrapper">
+
+    <!-- ══════════════════════ PAGE HERO ══════════════════════ -->
+    <section class="page-hero section">
+      <span class="section-tag reveal">// Mini Game</span>
+      <h1 class="section-title reveal delay-1">Guess the <em>AI Term</em></h1>
+      <p class="section-desc reveal delay-2">How well do you know your Machine Learning vocabulary? 20 questions · 30 seconds each · 3 lives.</p>
+      <div class="divider reveal delay-2" style="margin:1.25rem 0 0;"></div>
+    </section>
+
+    <!-- ══════════════════════ GAME AREA ══════════════════════ -->
+    <section class="section game-section" style="padding-top:0;">
+
+      <!-- ── SCREEN: START ─────────────────────────────────── -->
+      <div class="game-screen" id="screen-start">
+        <div class="game-card reveal">
+          <div class="gc-icon">🧠</div>
+          <h2 class="gc-title">Ready to Test Your AI Knowledge?</h2>
+          <p class="gc-sub">You'll be shown a definition or clue. Pick the correct ML/AI term from 4 options.<br/>Answer fast — the timer counts down!</p>
+
+          <div class="rules-grid">
+            <div class="rule-item">
+              <span class="rule-icon">❓</span>
+              <span>20 Questions</span>
+            </div>
+            <div class="rule-item">
+              <span class="rule-icon">⏱</span>
+              <span>30s per question</span>
+            </div>
+            <div class="rule-item">
+              <span class="rule-icon">❤️</span>
+              <span>3 Lives total</span>
+            </div>
+            <div class="rule-item">
+              <span class="rule-icon">⚡</span>
+              <span>Bonus for speed</span>
+            </div>
+          </div>
+
+          <div class="difficulty-selector">
+            <span class="ds-label">Difficulty:</span>
+            <div class="ds-btns">
+              <button class="ds-btn" data-diff="easy">Easy</button>
+              <button class="ds-btn active" data-diff="medium">Medium</button>
+              <button class="ds-btn" data-diff="hard">Hard</button>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-lg w-full" id="btn-start" style="justify-content:center; margin-top:1.5rem;">
+            Start Game →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── SCREEN: GAME ──────────────────────────────────── -->
+      <div class="game-screen hidden" id="screen-game">
+
+        <!-- HUD -->
+        <div class="game-hud">
+          <div class="hud-left">
+            <div class="hud-item">
+              <span class="hud-label">Score</span>
+              <span class="hud-val" id="hud-score">0</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">Question</span>
+              <span class="hud-val"><span id="hud-qnum">1</span>/20</span>
+            </div>
+          </div>
+          <div class="hud-center">
+            <!-- Timer ring -->
+            <div class="timer-wrap" id="timer-wrap">
+              <svg class="timer-svg" viewBox="0 0 60 60">
+                <circle class="timer-bg"  cx="30" cy="30" r="26"/>
+                <circle class="timer-ring" id="timer-ring" cx="30" cy="30" r="26"
+                  stroke-dasharray="163.4" stroke-dashoffset="0"/>
+              </svg>
+              <span class="timer-num" id="timer-num">30</span>
+            </div>
+          </div>
+          <div class="hud-right">
+            <div class="hud-item">
+              <span class="hud-label">Streak</span>
+              <span class="hud-val text-accent2" id="hud-streak">0🔥</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">Lives</span>
+              <span class="hud-val" id="hud-lives">❤️❤️❤️</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="q-progress-wrap">
+          <div class="q-progress-fill" id="q-progress"></div>
+        </div>
+
+        <!-- Category badge -->
+        <div class="q-category-wrap">
+          <span class="tag" id="q-category">Fundamentals</span>
+          <span class="q-diff-badge" id="q-diff-badge">Medium</span>
+        </div>
+
+        <!-- Question -->
+        <div class="question-card" id="question-card">
+          <p class="question-text" id="question-text">Loading question...</p>
+          <!-- Hint -->
+          <div class="q-hint" id="q-hint" style="display:none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="q-hint-text"></span>
+          </div>
+        </div>
+
+        <!-- Options -->
+        <div class="options-grid" id="options-grid" role="group" aria-label="Answer options">
+          <!-- Injected by JS -->
+        </div>
+
+        <!-- Bottom row -->
+        <div class="game-bottom">
+          <button class="btn btn-ghost btn-sm" id="btn-hint-toggle">
+            💡 Show Hint <span class="hint-cost">(−5 pts)</span>
+          </button>
+          <button class="btn btn-ghost btn-sm" id="btn-skip">
+            Skip ⏭
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ── SCREEN: ANSWER FEEDBACK ───────────────────────── -->
+      <div class="game-screen hidden" id="screen-feedback">
+        <div class="feedback-card" id="feedback-card">
+          <div class="fb-result-icon" id="fb-icon">✓</div>
+          <h3 class="fb-result-text" id="fb-result-text">Correct!</h3>
+          <div class="fb-term" id="fb-term"></div>
+          <p class="fb-explanation" id="fb-explanation"></p>
+          <div class="fb-points" id="fb-points"></div>
+          <button class="btn btn-primary" id="btn-next" style="margin-top:1.5rem;">Next Question →</button>
+        </div>
+      </div>
+
+      <!-- ── SCREEN: GAME OVER ─────────────────────────────── -->
+      <div class="game-screen hidden" id="screen-gameover">
+        <div class="game-card gameover-card reveal">
+          <div class="go-result" id="go-result">
+            <div class="go-icon" id="go-icon">🎯</div>
+            <h2 class="go-title" id="go-title">Game Over</h2>
+            <p class="go-subtitle" id="go-subtitle">Here's how you did:</p>
+          </div>
+
+          <div class="score-display">
+            <div class="sd-main">
+              <span class="sd-num" id="sd-final-score">0</span>
+              <span class="sd-label">Final Score</span>
+            </div>
+            <div class="sd-stats">
+              <div class="sd-stat">
+                <span class="sd-stat-num" id="sd-correct">0</span>
+                <span class="sd-stat-label">Correct</span>
+              </div>
+              <div class="sd-stat">
+                <span class="sd-stat-num" id="sd-wrong">0</span>
+                <span class="sd-stat-label">Wrong</span>
+              </div>
+              <div class="sd-stat">
+                <span class="sd-stat-num" id="sd-accuracy">0%</span>
+                <span class="sd-stat-label">Accuracy</span>
+              </div>
+              <div class="sd-stat">
+                <span class="sd-stat-num" id="sd-best-streak">0</span>
+                <span class="sd-stat-label">Best Streak</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rank badge -->
+          <div class="rank-badge" id="rank-badge">
+            <span class="rb-icon" id="rb-icon">🥉</span>
+            <div>
+              <span class="rb-title" id="rb-title">AI Beginner</span>
+              <span class="rb-sub" id="rb-sub">Keep studying those fundamentals!</span>
+            </div>
+          </div>
+
+          <!-- Missed questions review -->
+          <div class="missed-section" id="missed-section" style="display:none;">
+            <h4 class="missed-heading">📚 Review Missed Terms</h4>
+            <div class="missed-list" id="missed-list"></div>
+          </div>
+
+          <div class="go-actions">
+            <button class="btn btn-primary btn-lg" id="btn-restart">Play Again 🔄</button>
+            <a href="../index.html" class="btn btn-outline btn-lg">Back to Portfolio</a>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Leaderboard hint -->
+    <section class="section" style="padding-top:0; padding-bottom:4rem;">
+      <div class="leaderboard-tease card reveal">
+        <div class="lt-icon">🏆</div>
+        <div>
+          <h4>Challenge Others</h4>
+          <p>Share your score and challenge your friends to beat it!</p>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btn-share">Share Score</button>
+      </div>
+    </section>
+
+  </div><!-- /page-wrapper -->
+
+  <script src="../js/components.js"></script>
+  <script src="../js/game.js"></script>
+</body>
+</html>
