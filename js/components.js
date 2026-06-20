@@ -509,14 +509,20 @@ function showToast(message, type = 'info') {
 
 /* ── Centralized Page Initializer ────────────────────────────── */
 function initPage(rootPrefix = '../', callback = null) {
-  document.addEventListener('DOMContentLoaded', () => {
+  const runInit = () => {
     injectNavbar(rootPrefix);
     injectFooter(rootPrefix);
     initReveal();
     initCardSpotlight();
     
     if (callback) callback();
-  });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runInit);
+  } else {
+    runInit();
+  }
 }
 
 /* ── Export ──────────────────────────────────────────────────── */
