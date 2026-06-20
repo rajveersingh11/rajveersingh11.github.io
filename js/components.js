@@ -46,6 +46,17 @@ const contactLink = { href: 'contact.html', label: 'Contact', page: 'contact.htm
 
 /* ── Inject Navbar ───────────────────────────────────────────── */
 function injectNavbar(rootPrefix = '../') {
+  // Helper to resolve page links based on root prefix location
+  const resolveLink = (href) => {
+    if (rootPrefix === '') {
+      // Root folder context (e.g. index.html)
+      return href.startsWith('../') ? href.replace('../', '') : 'pages/' + href;
+    } else {
+      // Sub-folder context (e.g. pages/about.html)
+      return href;
+    }
+  };
+
   // Prepend skip-to-content link for accessibility
   const skipLink = document.createElement('a');
   skipLink.className = 'skip-link';
@@ -57,35 +68,20 @@ function injectNavbar(rootPrefix = '../') {
 
   // Generate links for desktop navbar
   const primaryHTML = primaryNavLinks.map(l => {
-    let href = l.href;
-    if (rootPrefix === '') {
-      href = href.replace('../', '');
-    } else if (rootPrefix === '../' && !href.startsWith('../')) {
-      href = rootPrefix + href;
-    }
+    const href = resolveLink(l.href);
     const isActive = currentPage === l.page ? 'active' : '';
     const ariaCurrent = currentPage === l.page ? 'aria-current="page"' : '';
     return `<a href="${href}" class="${isActive}" ${ariaCurrent} aria-label="${l.label}">${l.label}</a>`;
   }).join('');
 
   const secondaryHTML = secondaryNavLinks.map(l => {
-    let href = l.href;
-    if (rootPrefix === '') {
-      href = href.replace('../', '');
-    } else if (rootPrefix === '../' && !href.startsWith('../')) {
-      href = rootPrefix + href;
-    }
+    const href = resolveLink(l.href);
     const isActive = currentPage === l.page ? 'active' : '';
     const ariaCurrent = currentPage === l.page ? 'aria-current="page"' : '';
     return `<a href="${href}" class="${isActive}" ${ariaCurrent} aria-label="${l.label}">${l.label}</a>`;
   }).join('');
 
-  let contactHref = contactLink.href;
-  if (rootPrefix === '') {
-    contactHref = contactHref.replace('../', '');
-  } else if (rootPrefix === '../' && !contactHref.startsWith('../')) {
-    contactHref = rootPrefix + contactHref;
-  }
+  const contactHref = resolveLink(contactLink.href);
   const contactActive = currentPage === contactLink.page ? 'active' : '';
   const contactAria = currentPage === contactLink.page ? 'aria-current="page"' : '';
   const contactCtaHTML = `<a href="${contactHref}" class="${contactActive} nav-cta" ${contactAria} aria-label="${contactLink.label}">${contactLink.label}</a>`;
@@ -131,17 +127,13 @@ function injectNavbar(rootPrefix = '../') {
 
   // Generate mobile menu links with structured hierarchy
   const mobilePrimaryLinks = primaryNavLinks.map(l => {
-    let href = l.href;
-    if (rootPrefix === '') href = href.replace('../', '');
-    else if (rootPrefix === '../' && !href.startsWith('../')) href = rootPrefix + href;
+    const href = resolveLink(l.href);
     const isActive = currentPage === l.page ? 'active' : '';
     return `<a href="${href}" class="${isActive}">${l.label}</a>`;
   }).join('');
 
   const mobileSecondaryLinks = secondaryNavLinks.map(l => {
-    let href = l.href;
-    if (rootPrefix === '') href = href.replace('../', '');
-    else if (rootPrefix === '../' && !href.startsWith('../')) href = rootPrefix + href;
+    const href = resolveLink(l.href);
     const isActive = currentPage === l.page ? 'active' : '';
     return `<a href="${href}" class="${isActive} mobile-sub-link">${l.label}</a>`;
   }).join('');
