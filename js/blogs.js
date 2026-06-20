@@ -1,9 +1,5 @@
 /* blogs.js */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal, showToast } = window.PortfolioUtils;
-  injectNavbar('../');
-  injectFooter('../');
-  initReveal();
+PortfolioUtils.initPage('../', () => {
 
   // ── Category filter ──────────────────────────────────────────
   const grid     = document.getElementById('blogs-grid');

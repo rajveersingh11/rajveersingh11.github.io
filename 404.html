@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="404 Page Not Found - The requested page could not be found." />
+  <title>404: Page Not Found — Rajveer Singh</title>
+  <meta name="theme-color" content="#050a0f" />
+  <meta name="color-scheme" content="dark light" />
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./css/main.css" />
+  <style>
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      padding: 2rem;
+    }
+    .error-code {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: clamp(4rem, 10vw, 8rem);
+      color: var(--accent3);
+      text-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .error-title {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .error-desc {
+      max-width: 500px;
+      color: var(--text2);
+      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+    .terminal-box {
+      font-family: 'Share Tech Mono', monospace;
+      background: rgba(5, 10, 15, 0.7);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: 8px;
+      padding: 1.5rem;
+      max-width: 450px;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+    .t-prompt { color: var(--accent2); }
+    .t-cmd { color: var(--text); }
+    .t-err { color: var(--accent3); }
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <main id="main-content" class="page-wrapper">
+    <div class="error-container">
+      <div class="error-code">404</div>
+      <h1 class="error-title">Connection <em>Lost</em></h1>
+      
+      <div class="terminal-box">
+        <p><span class="t-prompt">visitor@rajveer:~$</span> <span class="t-cmd">curl -I https://rajveersingh11.github.io/missing-page</span></p>
+        <p style="margin-top: 0.5rem;"><span class="t-err">HTTP/1.1 404 Not Found</span></p>
+        <p><span class="t-err">Status: Page Has Drifted into Cosmic Void</span></p>
+      </div>
+
+      <p class="error-desc">
+        The page you are looking for does not exist or has been relocated in the cosmos. Let's redirect you back to active systems.
+      </p>
+
+      <div class="btn-group">
+        <a href="./index.html" class="btn btn-primary">Return Home</a>
+        <a href="./pages/projects.html" class="btn btn-outline">View Projects</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="./js/components.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.PortfolioUtils && typeof window.PortfolioUtils.initPage === 'function') {
+        window.PortfolioUtils.initPage('./');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -295,3 +295,39 @@
   .expertise-grid { grid-template-columns: 1fr; }
   .hero-name { font-size: clamp(2.5rem, 12vw, 4rem); }
 }
+
+/* ── Now Widget in Hero ── */
+.now-widget {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8rem;
+  max-width: 100%;
+  text-align: left;
+}
+.now-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent2);
+  display: inline-block;
+  box-shadow: 0 0 8px var(--accent2);
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.now-label {
+  font-family: var(--font-mono);
+  color: var(--accent2);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.now-text {
+  color: var(--text2);
+}
+

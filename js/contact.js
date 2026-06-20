@@ -1,11 +1,7 @@
 /* ============================================================
    CONTACT.JS — Form Validation + EmailJS Integration
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal, showToast } = window.PortfolioUtils;
-  injectNavbar('../');
-  injectFooter('../');
-  initReveal();
+PortfolioUtils.initPage('../', () => {
 
   /* ── EmailJS config ─────────────────────────────────────────
    *  Replace these values with your own from emailjs.com:
@@ -17,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // ← replace
   const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';   // ← replace
   const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // ← replace
+
+  if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+    console.warn('EmailJS: Keys are not configured. The form will fall back to mailto client.');
+  }
 
   // Initialize EmailJS
   if (typeof emailjs !== 'undefined') {

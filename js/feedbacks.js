@@ -1,11 +1,7 @@
 /* ============================================================
    FEEDBACKS.JS
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal, animateCounter } = window.PortfolioUtils;
-  injectNavbar('../');
-  injectFooter('../');
-  initReveal();
+PortfolioUtils.initPage('../', () => {
 
   // Animate client count counter
   const statObserver = new IntersectionObserver((entries) => {

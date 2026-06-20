@@ -1,11 +1,7 @@
 /* ============================================================
    ABOUT.JS
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal } = window.PortfolioUtils;
-  injectNavbar('../');
-  injectFooter('../');
-  initReveal();
+PortfolioUtils.initPage('../', () => {
 
   // ── Animate progress bars on visibility ─────────────────────
   const barObserver = new IntersectionObserver((entries) => {

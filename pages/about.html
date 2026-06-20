@@ -3,10 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="About Rajveer Singh — AI & Python Engineer. Skills, background, and expertise." />
+  <meta name="description" content="Learn more about Rajveer Singh — an AI & Python Engineer specializing in RAG systems, machine learning pipelines, deep learning models, and MLOps automation." />
   <title>About — Rajveer Singh</title>
+  <meta name="theme-color" content="#050a0f" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="view-transition" content="same-origin" />
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+  <link rel="canonical" href="https://rajveersingh11.github.io/pages/about.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rajveersingh11.github.io/pages/about.html" />
+  <meta property="og:title" content="About — Rajveer Singh" />
+  <meta property="og:description" content="AI & Python Engineer background, core expertise, and technical skill set." />
+  <meta property="og:image" content="https://rajveersingh11.github.io/images/og-image.jpg" />
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/main.css" />
   <link rel="stylesheet" href="../css/about.css" />
 </head>
@@ -14,7 +32,7 @@
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
 
-  <div class="page-wrapper">
+  <main id="main-content" class="page-wrapper">
 
     <!-- ══════════════════════ PAGE HERO ══════════════════════ -->
     <section class="page-hero section" aria-labelledby="about-heading">
@@ -34,9 +52,32 @@
         <!-- LEFT: Profile Card -->
         <aside class="profile-card card reveal-left">
           <div class="profile-img-wrap">
-            <!-- Replace src with actual photo: ../images/profile.jpg -->
-            <div class="profile-placeholder" aria-label="Rajveer Singh">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(0,212,255,0.5)" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div class="profile-placeholder" aria-label="Rajveer Singh Avatar" style="display:flex; justify-content:center; align-items:center; background:var(--bg3); border-radius:var(--radius); padding:1rem;">
+              <svg width="100" height="100" viewBox="0 0 100 100" class="profile-avatar" aria-label="Rajveer Singh Avatar">
+                <defs>
+                  <radialGradient id="avatarGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.2" />
+                    <stop offset="100%" stop-color="transparent" stop-opacity="0" />
+                  </radialGradient>
+                  <linearGradient id="avatarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--accent)" />
+                    <stop offset="100%" stop-color="var(--accent2)" />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" fill="url(#avatarGlow)" />
+                <circle cx="50" cy="50" r="40" fill="none" stroke="url(#avatarGrad)" stroke-width="1" stroke-dasharray="12 4 4 4" />
+                <circle cx="50" cy="50" r="36" fill="none" stroke="var(--border)" stroke-width="0.5" />
+                <path d="M50 25 C42 25, 38 31, 38 38 C38 48, 50 56, 50 56 C50 56, 62 48, 62 38 C62 31, 58 25, 50 25 Z" fill="none" stroke="url(#avatarGrad)" stroke-width="2" />
+                <line x1="50" y1="20" x2="50" y2="28" stroke="var(--accent2)" stroke-width="1.5" />
+                <circle cx="50" cy="38" r="3" fill="var(--accent)" />
+                <circle cx="45" cy="35" r="1" fill="var(--accent2)" />
+                <circle cx="55" cy="35" r="1" fill="var(--accent2)" />
+                <path d="M30 75 C30 65, 38 60, 50 60 C62 60, 70 65, 70 75" fill="none" stroke="url(#avatarGrad)" stroke-width="2" />
+                <circle cx="50" cy="10" r="1.5" fill="var(--accent2)" />
+                <circle cx="10" cy="50" r="1.5" fill="var(--accent2)" />
+                <circle cx="90" cy="50" r="1.5" fill="var(--accent)" />
+                <circle cx="50" cy="90" r="1.5" fill="var(--accent)" />
+              </svg>
             </div>
             <div class="profile-status">
               <span class="badge-dot"></span> Open to Work
@@ -61,7 +102,7 @@
             </a>
           </div>
           <div class="profile-actions">
-            <a href="#" class="btn btn-primary w-full" style="justify-content:center;">Download CV</a>
+            <a href="../resume.pdf" target="_blank" class="btn btn-primary w-full" style="justify-content:center;">Download CV</a>
             <a href="contact.html" class="btn btn-outline w-full" style="justify-content:center;">Hire Me</a>
           </div>
         </aside>
@@ -85,28 +126,36 @@
             </h3>
             <div class="wid-grid">
               <div class="wid-item">
-                <span class="wid-icon">🤖</span>
+                <span class="wid-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="2" ry="2"/><path d="M12 2v6"/><path d="M8 2h8"/><path d="M8 12h.01"/><path d="M16 12h.01"/><path d="M9 16h6"/></svg>
+                </span>
                 <div>
                   <h4>LLM & RAG Systems</h4>
                   <p>Building retrieval-augmented generation pipelines with privacy-aware document processing and enterprise-grade deployment.</p>
                 </div>
               </div>
               <div class="wid-item">
-                <span class="wid-icon">🔬</span>
+                <span class="wid-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-14 0"/><path d="M9 14h2"/><path d="M9 12a3 3 0 0 1-3-3V6h4v3a3 3 0 0 1-3 3Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>
+                </span>
                 <div>
                   <h4>ML Model Development</h4>
                   <p>Designing, training, and evaluating classification and detection models with hyperparameter optimization.</p>
                 </div>
               </div>
               <div class="wid-item">
-                <span class="wid-icon">⚙️</span>
+                <span class="wid-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                </span>
                 <div>
                   <h4>MLOps Pipelines</h4>
                   <p>End-to-end workflows from ingestion to deployment with Docker, MLflow, CI/CD, and REST API serving.</p>
                 </div>
               </div>
               <div class="wid-item">
-                <span class="wid-icon">🎯</span>
+                <span class="wid-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </span>
                 <div>
                   <h4>Computer Vision</h4>
                   <p>Real-time inference systems using CNNs, transfer learning, and optimized OpenCV preprocessing pipelines.</p>
@@ -310,9 +359,9 @@
       </div>
     </section>
 
-  </div><!-- /page-wrapper -->
+  </main><!-- /page-wrapper -->
 
-  <script src="../js/components.js"></script>
-  <script src="../js/about.js"></script>
+  <script src="../js/components.js" defer></script>
+  <script src="../js/about.js" defer></script>
 </body>
 </html>

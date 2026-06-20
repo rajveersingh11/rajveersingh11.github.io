@@ -4,8 +4,7 @@
    Author: Portfolio Generator for Rajveer Singh
    ============================================================ */
 
-/* ── Google Fonts ─────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+/* Google Fonts are preconnected and loaded in the HTML headers for performance */
 
 /* ── CSS Variables ─────────────────────────────────────────── */
 :root {
@@ -416,3 +415,227 @@ footer {
 @media (max-width: 480px) {
   .footer-inner { grid-template-columns: 1fr; }
 }
+
+/* ── Keyboard Accessibility Focus States ── */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: bold;
+  z-index: 2000;
+  transition: top 0.3s ease;
+}
+.skip-link:focus-visible {
+  top: 10px;
+  outline: none;
+}
+
+/* ── Desktop Navbar Dropdown ── */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-trigger {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  color: var(--text2);
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.dropdown-trigger svg {
+  transition: transform var(--transition);
+}
+.nav-dropdown:hover .dropdown-trigger,
+.nav-dropdown:focus-within .dropdown-trigger {
+  color: var(--accent);
+  background: rgba(0,212,255,0.06);
+}
+.nav-dropdown:hover .dropdown-trigger svg,
+.nav-dropdown:focus-within .dropdown-trigger svg {
+  transform: rotate(180deg);
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0;
+  min-width: 160px;
+  display: none;
+  flex-direction: column;
+  z-index: 1001;
+  box-shadow: var(--shadow2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown:focus-within .dropdown-menu {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.dropdown-menu a {
+  font-size: 0.72rem !important;
+  padding: 0.6rem 1rem !important;
+  text-align: left;
+  width: 100%;
+  border-radius: 0 !important;
+}
+.dropdown-menu a::after {
+  display: none !important;
+}
+.dropdown-menu a:hover {
+  background: rgba(0,212,255,0.08) !important;
+  color: var(--accent) !important;
+}
+
+/* ── Navbar Theme Toggle ── */
+.theme-toggle {
+  background: none;
+  border: none;
+  color: var(--text2);
+  padding: 0.45rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+.theme-toggle:hover {
+  color: var(--accent);
+  background: rgba(0,212,255,0.06);
+}
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+.theme-toggle .moon-icon {
+  display: none;
+}
+.light-theme .theme-toggle .sun-icon {
+  display: none;
+}
+.light-theme .theme-toggle .moon-icon {
+  display: block;
+}
+
+/* ── Mobile Menu Additions ── */
+.mobile-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.75rem 0.5rem;
+}
+.mobile-group-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-left: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.mobile-sub-link {
+  font-size: 0.78rem !important;
+  color: var(--text2) !important;
+  padding-left: 1.5rem !important;
+}
+
+/* ── Mouse Spotlight Glow effect for cards ── */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px circle at var(--x, 50%) var(--y, 50%), rgba(0,212,255,0.08), transparent 40%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+/* ── Parallel Light Theme variables ── */
+:root.light-theme, body.light-theme {
+  --bg:          #f4f7fa;
+  --bg2:         #ebeff3;
+  --bg3:         #e0e6ec;
+  --surface:     #ffffff;
+  --surface2:    #f1f5f8;
+  --border:      #cfdae5;
+  --border2:     #b6c7d8;
+  --accent:      #008aa3;
+  --accent2:     #009e60;
+  --accent3:     #cc4e1a;
+  --text:        #182a3a;
+  --text2:       #4c6275;
+  --text3:       #7a8f9f;
+  --white:       #0a141e;
+  --shadow:      0 4px 20px rgba(0,0,0,0.04);
+  --shadow2:     0 8px 30px rgba(0,0,0,0.08);
+  --glow:        0 0 15px rgba(0,138,163,0.08);
+  --glow2:       0 0 30px rgba(0,138,163,0.04);
+}
+.light-theme .bg-grid {
+  background-image:
+    linear-gradient(rgba(0,138,163,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,138,163,0.025) 1px, transparent 1px);
+}
+.light-theme .bg-glow {
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,138,163,0.04) 0%, transparent 60%);
+}
+.light-theme .card-glow::before {
+  background: radial-gradient(400px circle at var(--x, 50%) var(--y, 50%), rgba(0,138,163,0.08), transparent 40%);
+}
+
+/* ── View Transitions API ── */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: 250ms;
+  animation-timing-function: ease;
+}
+
+/* ── Reduced Motion Override ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
+}
+

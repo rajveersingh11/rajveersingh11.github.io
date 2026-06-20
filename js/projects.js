@@ -1,11 +1,7 @@
 /* ============================================================
    PROJECTS.JS — Search, Filter, and Reveal
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal } = window.PortfolioUtils;
-  injectNavbar('../');
-  injectFooter('../');
-  initReveal();
+PortfolioUtils.initPage('../', () => {
 
   const grid      = document.getElementById('projects-grid');
   const noResults = document.getElementById('no-results');
@@ -28,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const title  = card.dataset.title  || '';
       const langs  = card.dataset.langs  || '';
 
-      const matchFilter = activeFilter === 'all' || tags.includes(activeFilter);
+      const matchFilter = activeFilter === 'all' || tags.split(',').map(t => t.trim().toLowerCase()).includes(activeFilter.toLowerCase());
       const matchStatus = activeStatus === 'all' || status === activeStatus;
       const matchSearch = !searchQuery ||
         title.toLowerCase().includes(searchQuery) ||

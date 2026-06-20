@@ -1,11 +1,7 @@
 /* ============================================================
    GAME.JS — Guess the AI Term (Quiz with timer, lives, difficulty)
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal, showToast } = window.PortfolioUtils;
-  injectNavbar('../');
-  injectFooter('../');
-  initReveal();
+PortfolioUtils.initPage('../', () => {
 
   // ---------- QUESTION BANK (20 questions) ----------
   const questionBank = [
@@ -72,48 +68,120 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('q-progress').style.width = `${progress}%`;
   }
 
+  let timerDuration = 30000;
+  let timerRemaining = 30000;
+  let lastTick = null;
+  let timerAnimId = null;
+
   function stopTimer() {
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
+    if (timerAnimId) {
+      cancelAnimationFrame(timerAnimId);
+      timerAnimId = null;
     }
   }
 
   function startTimer() {
     stopTimer();
     const settings = difficultySettings[currentDifficulty];
-    timeLeft = settings.timeSec;
+    timerDuration = settings.timeSec * 1000;
+    timerRemaining = timerDuration;
+    const timerStart = performance.now();
+    lastTick = timerStart;
+    
     const timerNum = document.getElementById('timer-num');
     const timerRing = document.getElementById('timer-ring');
     const circumference = 2 * Math.PI * 26;
     timerRing.style.strokeDasharray = circumference;
     timerRing.style.strokeDashoffset = 0;
-    timerNum.innerText = timeLeft;
+    timerNum.innerText = settings.timeSec;
     timerNum.classList.remove('warn', 'danger');
     timerRing.classList.remove('warn', 'danger');
 
-    timerInterval = setInterval(() => {
+    function tick(now) {
       if (!gameActive || answerLocked) return;
-      if (timeLeft <= 1) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        if (!answerLocked) handleTimeout();
+      const delta = now - lastTick;
+      lastTick = now;
+      timerRemaining -= delta;
+      
+      if (timerRemaining <= 0) {
+        timerRemaining = 0;
+        timerNum.innerText = 0;
+        timerRing.style.strokeDashoffset = circumference;
+        handleTimeout();
       } else {
-        timeLeft--;
-        timerNum.innerText = timeLeft;
-        const offset = circumference * (1 - timeLeft / settings.timeSec);
+        const secs = Math.ceil(timerRemaining / 1000);
+        timerNum.innerText = secs;
+        timeLeft = secs;
+        
+        const offset = circumference * (1 - timerRemaining / timerDuration);
         timerRing.style.strokeDashoffset = offset;
-        // Update warning classes
-        if (timeLeft <= 5) {
+        
+        if (secs <= 5) {
           timerNum.classList.add('danger');
           timerRing.classList.add('danger');
-        } else if (timeLeft <= 10) {
+        } else if (secs <= 10) {
           timerNum.classList.add('warn');
           timerRing.classList.add('warn');
+        } else {
+          timerNum.classList.remove('warn', 'danger');
+          timerRing.classList.remove('warn', 'danger');
         }
+        
+        timerAnimId = requestAnimationFrame(tick);
       }
-    }, 1000);
+    }
+    
+    timerAnimId = requestAnimationFrame(tick);
   }
+
+  // Handle visibility change to prevent burst timers on tab switch
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopTimer();
+    } else {
+      if (gameActive && !answerLocked) {
+        lastTick = performance.now();
+        const timerNum = document.getElementById('timer-num');
+        const timerRing = document.getElementById('timer-ring');
+        const circumference = 2 * Math.PI * 26;
+        
+        function tick(now) {
+          if (!gameActive || answerLocked) return;
+          const delta = now - lastTick;
+          lastTick = now;
+          timerRemaining -= delta;
+          
+          if (timerRemaining <= 0) {
+            timerRemaining = 0;
+            timerNum.innerText = 0;
+            timerRing.style.strokeDashoffset = circumference;
+            handleTimeout();
+          } else {
+            const secs = Math.ceil(timerRemaining / 1000);
+            timerNum.innerText = secs;
+            timeLeft = secs;
+            
+            const offset = circumference * (1 - timerRemaining / timerDuration);
+            timerRing.style.strokeDashoffset = offset;
+            
+            if (secs <= 5) {
+              timerNum.classList.add('danger');
+              timerRing.classList.add('danger');
+            } else if (secs <= 10) {
+              timerNum.classList.add('warn');
+              timerRing.classList.add('warn');
+            } else {
+              timerNum.classList.remove('warn', 'danger');
+              timerRing.classList.remove('warn', 'danger');
+            }
+            
+            timerAnimId = requestAnimationFrame(tick);
+          }
+        }
+        timerAnimId = requestAnimationFrame(tick);
+      }
+    }
+  });
 
   function handleTimeout() {
     if (answerLocked) return;
@@ -201,9 +269,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lives <= 0) endGame();
   }
 
+  function showScreen(screenName) {
+    Object.keys(screens).forEach(key => {
+      if (key === screenName) {
+        screens[key].removeAttribute('hidden');
+      } else {
+        screens[key].setAttribute('hidden', '');
+      }
+    });
+  }
+
   function showFeedback(isCorrect, question, points, reason = '') {
-    screens.game.classList.add('hidden');
-    screens.feedback.classList.remove('hidden');
+    showScreen('feedback');
     const iconEl = document.getElementById('fb-icon');
     const resultText = document.getElementById('fb-result-text');
     const termDiv = document.getElementById('fb-term');
@@ -240,8 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lives <= 0) endGame();
       else completeQuiz();
     } else {
-      screens.feedback.classList.add('hidden');
-      screens.game.classList.remove('hidden');
+      showScreen('game');
       loadQuestion();
     }
   }
@@ -249,21 +325,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function completeQuiz() {
     gameActive = false;
     stopTimer();
-    screens.feedback.classList.add('hidden');
-    screens.game.classList.add('hidden');
     showGameOverScreen(true);
   }
 
   function endGame() {
     gameActive = false;
     stopTimer();
-    screens.feedback.classList.add('hidden');
-    screens.game.classList.add('hidden');
     showGameOverScreen(false);
   }
 
   function showGameOverScreen(completed) {
-    screens.gameover.classList.remove('hidden');
+    showScreen('gameover');
     document.getElementById('sd-final-score').innerText = score;
     document.getElementById('sd-correct').innerText = correctAnswers;
     document.getElementById('sd-wrong').innerText = wrongAnswers;
@@ -321,10 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const j = Math.floor(Math.random() * (i + 1));
       [selectedQuestions[i], selectedQuestions[j]] = [selectedQuestions[j], selectedQuestions[i]];
     }
-    screens.start.classList.add('hidden');
-    screens.game.classList.remove('hidden');
-    screens.feedback.classList.add('hidden');
-    screens.gameover.classList.add('hidden');
+    showScreen('game');
     loadQuestion();
   }
 
@@ -339,14 +408,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('btn-next').addEventListener('click', nextQuestion);
   document.getElementById('btn-restart').addEventListener('click', () => {
-    screens.gameover.classList.add('hidden');
-    screens.start.classList.remove('hidden');
+    showScreen('start');
     gameActive = false;
     stopTimer();
   });
   document.getElementById('btn-play-again')?.addEventListener('click', () => {
-    screens.gameover.classList.add('hidden');
-    screens.start.classList.remove('hidden');
+    showScreen('start');
   });
 
   // Hint toggle

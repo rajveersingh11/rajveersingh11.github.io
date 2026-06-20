@@ -1,13 +1,8 @@
 /* ============================================================
    HOME.JS — Landing Page Interactivity
    ============================================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const { injectNavbar, injectFooter, initReveal, typeText, initParticles, animateCounter } = window.PortfolioUtils;
-
-  // Inject shared components (root level — no prefix needed)
-  injectNavbar('');
-  injectFooter('');
-  initReveal();
+PortfolioUtils.initPage('', () => {
+  const { typeText, initParticles, animateCounter } = window.PortfolioUtils;
 
   // ── Particle canvas ──────────────────────────────────────────
   initParticles('hero-canvas');
