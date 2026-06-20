@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "html-validate:recommended"
+  ],
+  "rules": {
+    "doctype-style": "off",
+    "void-style": "off",
+    "no-inline-style": "off",
+    "no-implicit-button-type": "off",
+    "no-raw-characters": "off",
+    "unrecognized-char-ref": "off",
+    "tel-non-breaking": "off",
+    "script-type": "off",
+    "aria-label-misuse": "off"
+  }
+}

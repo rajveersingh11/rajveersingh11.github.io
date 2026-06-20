@@ -1,2 +1,2 @@
 /* achievements.js */
-PortfolioUtils.initPage('../');
+PortfolioUtils.initPage("../");

@@ -5,52 +5,62 @@
 /* ── Unified Configuration ───────────────────────────────────── */
 const CONFIG = {
   socials: {
-    github: 'https://github.com/rajveersingh11',
-    linkedin: 'https://www.linkedin.com/in/rajveer-singh-403a5824a',
-    email: 'rajveersinghshekhawat3234@gmail.com',
-    phone: '+919521324077'
-  }
+    github: "https://github.com/rajveersingh11",
+    linkedin: "https://www.linkedin.com/in/rajveer-singh-403a5824a",
+    email: "rajveersinghshekhawat3234@gmail.com",
+    phone: "+919521324077",
+  },
 };
 
 // Immediate IIFE to set theme class on document element and prevent flashes
-(function() {
-  const savedTheme = localStorage.getItem('theme');
-  const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  if (savedTheme === 'light' || (!savedTheme && systemPrefersLight)) {
-    document.documentElement.classList.add('light-theme');
+(function () {
+  const savedTheme = localStorage.getItem("theme");
+  const systemPrefersLight = window.matchMedia(
+    "(prefers-color-scheme: light)",
+  ).matches;
+  if (savedTheme === "light" || (!savedTheme && systemPrefersLight)) {
+    document.documentElement.classList.add("light-theme");
   } else {
-    document.documentElement.classList.remove('light-theme');
+    document.documentElement.classList.remove("light-theme");
   }
 })();
 
-const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+const currentPage = window.location.pathname.split("/").pop() || "index.html";
 
 // Primary Navigation Links (max 6 items for clean scanning)
 const primaryNavLinks = [
-  { href: '../index.html',          label: 'Home',         page: 'index.html' },
-  { href: 'projects.html',          label: 'Projects',     page: 'projects.html' },
-  { href: 'research.html',          label: 'Research',     page: 'research.html' },
-  { href: 'about.html',             label: 'About',        page: 'about.html' },
-  { href: 'blogs.html',             label: 'Blog',         page: 'blogs.html' },
+  { href: "../index.html", label: "Home", page: "index.html" },
+  { href: "projects.html", label: "Projects", page: "projects.html" },
+  { href: "research.html", label: "Research", page: "research.html" },
+  { href: "about.html", label: "About", page: "about.html" },
+  { href: "blogs.html", label: "Blog", page: "blogs.html" },
 ];
 
 // Secondary dropdown links
 const secondaryNavLinks = [
-  { href: 'academics.html',         label: 'Academics',    page: 'academics.html' },
-  { href: 'achievements.html',      label: 'Achievements', page: 'achievements.html' },
-  { href: 'feedbacks.html',         label: 'Feedback',     page: 'feedbacks.html' },
-  { href: 'game.html',              label: 'AI Quiz',      page: 'game.html' },
+  { href: "academics.html", label: "Academics", page: "academics.html" },
+  {
+    href: "achievements.html",
+    label: "Achievements",
+    page: "achievements.html",
+  },
+  { href: "feedbacks.html", label: "Feedback", page: "feedbacks.html" },
+  { href: "game.html", label: "AI Quiz", page: "game.html" },
 ];
 
-const contactLink = { href: 'contact.html', label: 'Contact', page: 'contact.html' };
+const contactLink = {
+  href: "contact.html",
+  label: "Contact",
+  page: "contact.html",
+};
 
 /* ── Inject Navbar ───────────────────────────────────────────── */
-function injectNavbar(rootPrefix = '../') {
+function injectNavbar(rootPrefix = "../") {
   // Helper to resolve page links based on root prefix location
   const resolveLink = (href) => {
-    if (rootPrefix === '') {
+    if (rootPrefix === "") {
       // Root folder context (e.g. index.html)
-      return href.startsWith('../') ? href.replace('../', '') : 'pages/' + href;
+      return href.startsWith("../") ? href.replace("../", "") : "pages/" + href;
     } else {
       // Sub-folder context (e.g. pages/about.html)
       return href;
@@ -58,39 +68,44 @@ function injectNavbar(rootPrefix = '../') {
   };
 
   // Prepend skip-to-content link for accessibility
-  const skipLink = document.createElement('a');
-  skipLink.className = 'skip-link';
-  skipLink.href = '#main-content';
-  skipLink.textContent = 'Skip to content';
-  document.body.insertAdjacentElement('afterbegin', skipLink);
+  const skipLink = document.createElement("a");
+  skipLink.className = "skip-link";
+  skipLink.href = "#main-content";
+  skipLink.textContent = "Skip to content";
+  document.body.insertAdjacentElement("afterbegin", skipLink);
 
-  const isHome = currentPage === 'index.html' || currentPage === '';
+  const isHome = currentPage === "index.html" || currentPage === "";
 
   // Generate links for desktop navbar
-  const primaryHTML = primaryNavLinks.map(l => {
-    const href = resolveLink(l.href);
-    const isActive = currentPage === l.page ? 'active' : '';
-    const ariaCurrent = currentPage === l.page ? 'aria-current="page"' : '';
-    return `<a href="${href}" class="${isActive}" ${ariaCurrent} aria-label="${l.label}">${l.label}</a>`;
-  }).join('');
+  const primaryHTML = primaryNavLinks
+    .map((l) => {
+      const href = resolveLink(l.href);
+      const isActive = currentPage === l.page ? "active" : "";
+      const ariaCurrent = currentPage === l.page ? 'aria-current="page"' : "";
+      return `<a href="${href}" class="${isActive}" ${ariaCurrent} aria-label="${l.label}">${l.label}</a>`;
+    })
+    .join("");
 
-  const secondaryHTML = secondaryNavLinks.map(l => {
-    const href = resolveLink(l.href);
-    const isActive = currentPage === l.page ? 'active' : '';
-    const ariaCurrent = currentPage === l.page ? 'aria-current="page"' : '';
-    return `<a href="${href}" class="${isActive}" ${ariaCurrent} aria-label="${l.label}">${l.label}</a>`;
-  }).join('');
+  const secondaryHTML = secondaryNavLinks
+    .map((l) => {
+      const href = resolveLink(l.href);
+      const isActive = currentPage === l.page ? "active" : "";
+      const ariaCurrent = currentPage === l.page ? 'aria-current="page"' : "";
+      return `<a href="${href}" class="${isActive}" ${ariaCurrent} aria-label="${l.label}">${l.label}</a>`;
+    })
+    .join("");
 
   const contactHref = resolveLink(contactLink.href);
-  const contactActive = currentPage === contactLink.page ? 'active' : '';
-  const contactAria = currentPage === contactLink.page ? 'aria-current="page"' : '';
+  const contactActive = currentPage === contactLink.page ? "active" : "";
+  const contactAria =
+    currentPage === contactLink.page ? 'aria-current="page"' : "";
   const contactCtaHTML = `<a href="${contactHref}" class="${contactActive} nav-cta" ${contactAria} aria-label="${contactLink.label}">${contactLink.label}</a>`;
 
-  const logoHref = isHome ? '#' : `${rootPrefix}index.html`;
+  const logoHref = isHome ? "#" : `${rootPrefix}index.html`;
 
-  const navbar = document.createElement('nav');
-  navbar.className = 'navbar';
-  navbar.setAttribute('role', 'navigation');
+  const navbar = document.createElement("nav");
+  navbar.className = "navbar";
+  navbar.setAttribute("role", "navigation");
   navbar.innerHTML = `
     <a href="${logoHref}" class="nav-logo" aria-label="Home">
       RS<span>.</span>ai<span class="cursor"></span>
@@ -123,24 +138,28 @@ function injectNavbar(rootPrefix = '../') {
       <span></span><span></span><span></span>
     </button>
   `;
-  document.body.insertAdjacentElement('afterbegin', navbar);
+  document.body.insertAdjacentElement("afterbegin", navbar);
 
   // Generate mobile menu links with structured hierarchy
-  const mobilePrimaryLinks = primaryNavLinks.map(l => {
-    const href = resolveLink(l.href);
-    const isActive = currentPage === l.page ? 'active' : '';
-    return `<a href="${href}" class="${isActive}">${l.label}</a>`;
-  }).join('');
+  const mobilePrimaryLinks = primaryNavLinks
+    .map((l) => {
+      const href = resolveLink(l.href);
+      const isActive = currentPage === l.page ? "active" : "";
+      return `<a href="${href}" class="${isActive}">${l.label}</a>`;
+    })
+    .join("");
 
-  const mobileSecondaryLinks = secondaryNavLinks.map(l => {
-    const href = resolveLink(l.href);
-    const isActive = currentPage === l.page ? 'active' : '';
-    return `<a href="${href}" class="${isActive} mobile-sub-link">${l.label}</a>`;
-  }).join('');
+  const mobileSecondaryLinks = secondaryNavLinks
+    .map((l) => {
+      const href = resolveLink(l.href);
+      const isActive = currentPage === l.page ? "active" : "";
+      return `<a href="${href}" class="${isActive} mobile-sub-link">${l.label}</a>`;
+    })
+    .join("");
 
-  const mobileMenu = document.createElement('div');
-  mobileMenu.className = 'mobile-menu';
-  mobileMenu.id = 'mobile-menu';
+  const mobileMenu = document.createElement("div");
+  mobileMenu.className = "mobile-menu";
+  mobileMenu.id = "mobile-menu";
   mobileMenu.innerHTML = `
     ${mobilePrimaryLinks}
     <div class="mobile-divider"></div>
@@ -149,34 +168,34 @@ function injectNavbar(rootPrefix = '../') {
     <div class="mobile-divider"></div>
     ${contactCtaHTML}
   `;
-  document.body.insertAdjacentElement('afterbegin', mobileMenu);
+  document.body.insertAdjacentElement("afterbegin", mobileMenu);
 
   // Hamburger toggle & mobile menu state
-  const hamburger = document.getElementById('hamburger');
-  const mMenu = document.getElementById('mobile-menu');
+  const hamburger = document.getElementById("hamburger");
+  const mMenu = document.getElementById("mobile-menu");
 
   function openMobileMenu() {
-    mMenu.classList.add('open');
-    hamburger.classList.add('open');
-    hamburger.setAttribute('aria-expanded', 'true');
+    mMenu.classList.add("open");
+    hamburger.classList.add("open");
+    hamburger.setAttribute("aria-expanded", "true");
     // Focus first link in mobile menu for keyboard accessibility
-    const firstLink = mMenu.querySelector('a');
+    const firstLink = mMenu.querySelector("a");
     if (firstLink) firstLink.focus();
-    document.addEventListener('keydown', handleFocusTrap);
+    document.addEventListener("keydown", handleFocusTrap);
   }
 
   function closeMobileMenu() {
-    mMenu.classList.remove('open');
-    hamburger.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
-    document.removeEventListener('keydown', handleFocusTrap);
+    mMenu.classList.remove("open");
+    hamburger.classList.remove("open");
+    hamburger.setAttribute("aria-expanded", "false");
+    document.removeEventListener("keydown", handleFocusTrap);
     hamburger.focus();
   }
 
   // Focus trap for mobile menu
   function handleFocusTrap(e) {
-    if (e.key !== 'Tab') return;
-    const focusable = mMenu.querySelectorAll('a, button');
+    if (e.key !== "Tab") return;
+    const focusable = mMenu.querySelectorAll("a, button");
     if (focusable.length === 0) return;
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -194,8 +213,8 @@ function injectNavbar(rootPrefix = '../') {
     }
   }
 
-  hamburger.addEventListener('click', () => {
-    const isOpen = mMenu.classList.contains('open');
+  hamburger.addEventListener("click", () => {
+    const isOpen = mMenu.classList.contains("open");
     if (isOpen) {
       closeMobileMenu();
     } else {
@@ -204,37 +223,39 @@ function injectNavbar(rootPrefix = '../') {
   });
 
   // Close mobile menu on link click
-  mMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
+  mMenu.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", () => {
       closeMobileMenu();
     });
   });
 
   // Navbar scrolled class
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  window.addEventListener("scroll", () => {
+    navbar.classList.toggle("scrolled", window.scrollY > 40);
   });
 
   // Handle Theme Toggle action
-  const toggle = document.getElementById('theme-toggle');
+  const toggle = document.getElementById("theme-toggle");
   if (toggle) {
-    toggle.addEventListener('click', () => {
-      const isLight = document.body.classList.toggle('light-theme');
-      document.documentElement.classList.toggle('light-theme', isLight);
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    toggle.addEventListener("click", () => {
+      const isLight = document.body.classList.toggle("light-theme");
+      document.documentElement.classList.toggle("light-theme", isLight);
+      localStorage.setItem("theme", isLight ? "light" : "dark");
     });
   }
 
   // Accessibility: Handle dropdown aria attributes on hover/focus
-  const dropdownContainer = navbar.querySelector('.nav-dropdown');
-  const dropdownTrigger = navbar.querySelector('.dropdown-trigger');
+  const dropdownContainer = navbar.querySelector(".nav-dropdown");
+  const dropdownTrigger = navbar.querySelector(".dropdown-trigger");
   if (dropdownContainer && dropdownTrigger) {
-    const showMenu = () => dropdownTrigger.setAttribute('aria-expanded', 'true');
-    const hideMenu = () => dropdownTrigger.setAttribute('aria-expanded', 'false');
-    dropdownContainer.addEventListener('mouseenter', showMenu);
-    dropdownContainer.addEventListener('mouseleave', hideMenu);
-    dropdownContainer.addEventListener('focusin', showMenu);
-    dropdownContainer.addEventListener('focusout', (e) => {
+    const showMenu = () =>
+      dropdownTrigger.setAttribute("aria-expanded", "true");
+    const hideMenu = () =>
+      dropdownTrigger.setAttribute("aria-expanded", "false");
+    dropdownContainer.addEventListener("mouseenter", showMenu);
+    dropdownContainer.addEventListener("mouseleave", hideMenu);
+    dropdownContainer.addEventListener("focusin", showMenu);
+    dropdownContainer.addEventListener("focusout", (e) => {
       if (!dropdownContainer.contains(e.relatedTarget)) {
         hideMenu();
       }
@@ -243,10 +264,10 @@ function injectNavbar(rootPrefix = '../') {
 }
 
 /* ── Inject Footer ───────────────────────────────────────────── */
-function injectFooter(rootPrefix = '../') {
+function injectFooter(rootPrefix = "../") {
   const year = new Date().getFullYear();
-  const footer = document.createElement('footer');
-  footer.setAttribute('role', 'contentinfo');
+  const footer = document.createElement("footer");
+  footer.setAttribute("role", "contentinfo");
   footer.innerHTML = `
     <div class="footer-inner">
       <div class="footer-brand">
@@ -305,35 +326,52 @@ function injectFooter(rootPrefix = '../') {
 
 /* ── Reveal on Scroll ────────────────────────────────────────── */
 function initReveal() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
-      el.classList.add('visible');
-    });
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document
+      .querySelectorAll(".reveal, .reveal-left, .reveal-right")
+      .forEach((el) => {
+        el.classList.add("visible");
+      });
     return;
   }
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("visible");
+          observer.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+  );
 
-  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
-    observer.observe(el);
-  });
+  document
+    .querySelectorAll(".reveal, .reveal-left, .reveal-right")
+    .forEach((el) => {
+      observer.observe(el);
+    });
 }
 
 /* ── Typing Effect ───────────────────────────────────────────── */
 function typeText(el, texts, speed = 80, pause = 2200) {
-  let ti = 0, ci = 0, deleting = false;
+  let ti = 0,
+    ci = 0,
+    deleting = false;
   function tick() {
     const text = texts[ti];
     el.textContent = deleting ? text.slice(0, ci--) : text.slice(0, ci++);
-    if (!deleting && ci > text.length) { deleting = true; setTimeout(tick, pause); return; }
-    if (deleting && ci < 0) { deleting = false; ti = (ti + 1) % texts.length; ci = 0; }
+    if (!deleting && ci > text.length) {
+      deleting = true;
+      setTimeout(tick, pause);
+      return;
+    }
+    if (deleting && ci < 0) {
+      deleting = false;
+      ti = (ti + 1) % texts.length;
+      ci = 0;
+    }
     setTimeout(tick, deleting ? speed / 2 : speed);
   }
   tick();
@@ -341,21 +379,26 @@ function typeText(el, texts, speed = 80, pause = 2200) {
 
 /* ── Particle Canvas with IntersectionObserver ────────────────── */
 function initParticles(canvasId) {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [], animId = null;
+  const ctx = canvas.getContext("2d");
+  let W,
+    H,
+    particles = [],
+    animId = null;
   const N = 40; // Capped at 40 for optimal performance (O(n^2) connections search)
 
   function resize() {
-    W = canvas.width  = canvas.offsetWidth;
+    W = canvas.width = canvas.offsetWidth;
     H = canvas.height = canvas.offsetHeight;
   }
 
   class Particle {
-    constructor() { this.reset(); }
+    constructor() {
+      this.reset();
+    }
     reset() {
       this.x = Math.random() * W;
       this.y = Math.random() * H;
@@ -365,14 +408,15 @@ function initParticles(canvasId) {
       this.a = Math.random() * 0.6 + 0.2;
     }
     update() {
-      this.x += this.vx; this.y += this.vy;
+      this.x += this.vx;
+      this.y += this.vy;
       if (this.x < 0 || this.x > W) this.vx *= -1;
       if (this.y < 0 || this.y > H) this.vy *= -1;
     }
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = document.documentElement.classList.contains('light-theme') 
+      ctx.fillStyle = document.documentElement.classList.contains("light-theme")
         ? `rgba(0,138,163,${this.a})`
         : `rgba(0,212,255,${this.a})`;
       ctx.fill();
@@ -394,7 +438,9 @@ function initParticles(canvasId) {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          const strokeColor = document.documentElement.classList.contains('light-theme')
+          const strokeColor = document.documentElement.classList.contains(
+            "light-theme",
+          )
             ? `rgba(0,138,163,${0.12 * (1 - dist / 120)})`
             : `rgba(0,212,255,${0.15 * (1 - dist / 120)})`;
           ctx.strokeStyle = strokeColor;
@@ -407,52 +453,58 @@ function initParticles(canvasId) {
 
   function loop() {
     ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => { p.update(); p.draw(); });
+    particles.forEach((p) => {
+      p.update();
+      p.draw();
+    });
     drawConnections();
     animId = requestAnimationFrame(loop);
   }
 
   init();
-  window.addEventListener('resize', resize);
+  window.addEventListener("resize", resize);
 
   // IntersectionObserver to pause particles animation loop when offscreen
-  const canvasObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        if (!animId) loop();
-      } else {
-        if (animId) {
-          cancelAnimationFrame(animId);
-          animId = null;
+  const canvasObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          if (!animId) loop();
+        } else {
+          if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+          }
         }
-      }
-    });
-  }, { threshold: 0.05 });
+      });
+    },
+    { threshold: 0.05 },
+  );
 
   canvasObserver.observe(canvas);
 
   return () => {
     if (animId) cancelAnimationFrame(animId);
-    window.removeEventListener('resize', resize);
+    window.removeEventListener("resize", resize);
     canvasObserver.disconnect();
   };
 }
 
 /* ── Counter Animation ───────────────────────────────────────── */
-function animateCounter(el, target, duration = 1500, suffix = '') {
+function animateCounter(el, target, duration = 1500, suffix = "") {
   let startTime = null;
   function step(ts) {
     if (!startTime) startTime = ts;
     const progress = Math.min((ts - startTime) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-    
+
     // For small numbers (< 10), interpolate smoothly with one decimal place
     if (target < 10) {
-      el.textContent = (eased * target).toFixed(1).replace('.0', '') + suffix;
+      el.textContent = (eased * target).toFixed(1).replace(".0", "") + suffix;
     } else {
       el.textContent = Math.floor(eased * target) + suffix;
     }
-    
+
     if (progress < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -460,34 +512,36 @@ function animateCounter(el, target, duration = 1500, suffix = '') {
 
 /* ── Card Spotlight Cursor Effect ────────────────────────────── */
 function initCardSpotlight() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
   // Use event delegation for maximum performance on mousemove
-  document.addEventListener('mousemove', (e) => {
-    const card = e.target.closest('.card, .featured-card, .project-card, .research-item, .cert-card, .feedback-card');
+  document.addEventListener("mousemove", (e) => {
+    const card = e.target.closest(
+      ".card, .featured-card, .project-card, .research-item, .cert-card, .feedback-card",
+    );
     if (card) {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      card.style.setProperty('--x', `${x}px`);
-      card.style.setProperty('--y', `${y}px`);
+      card.style.setProperty("--x", `${x}px`);
+      card.style.setProperty("--y", `${y}px`);
     }
   });
 }
 
 /* ── Toast Notification ──────────────────────────────────────── */
-function showToast(message, type = 'info') {
-  const existing = document.querySelector('.toast');
+function showToast(message, type = "info") {
+  const existing = document.querySelector(".toast");
   if (existing) existing.remove();
 
-  const colors = { 
-    info: 'var(--accent)', 
-    success: 'var(--accent2)', 
-    error: 'var(--danger)', 
-    warning: 'var(--warning)' 
+  const colors = {
+    info: "var(--accent)",
+    success: "var(--accent2)",
+    error: "var(--danger)",
+    warning: "var(--warning)",
   };
-  const toast = document.createElement('div');
-  toast.className = 'toast';
+  const toast = document.createElement("div");
+  toast.className = "toast";
   toast.style.cssText = `
     position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
     background: var(--surface2); border: 1px solid ${colors[type]};
@@ -500,26 +554,26 @@ function showToast(message, type = 'info') {
   `;
   toast.textContent = message;
   document.body.appendChild(toast);
-  setTimeout(() => toast.style.transform = 'translateX(0)', 10);
+  setTimeout(() => (toast.style.transform = "translateX(0)"), 10);
   setTimeout(() => {
-    toast.style.transform = 'translateX(120%)';
+    toast.style.transform = "translateX(120%)";
     setTimeout(() => toast.remove(), 300);
   }, 3800);
 }
 
 /* ── Centralized Page Initializer ────────────────────────────── */
-function initPage(rootPrefix = '../', callback = null) {
+function initPage(rootPrefix = "../", callback = null) {
   const runInit = () => {
     injectNavbar(rootPrefix);
     injectFooter(rootPrefix);
     initReveal();
     initCardSpotlight();
-    
+
     if (callback) callback();
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runInit);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runInit);
   } else {
     runInit();
   }
@@ -528,13 +582,13 @@ function initPage(rootPrefix = '../', callback = null) {
 /* ── Export ──────────────────────────────────────────────────── */
 window.PortfolioUtils = {
   CONFIG,
-  injectNavbar, 
-  injectFooter, 
+  injectNavbar,
+  injectFooter,
   initReveal,
-  typeText, 
-  initParticles, 
-  animateCounter, 
+  typeText,
+  initParticles,
+  animateCounter,
   showToast,
   initCardSpotlight,
-  initPage
+  initPage,
 };

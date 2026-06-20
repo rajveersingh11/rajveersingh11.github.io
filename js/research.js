@@ -1,2 +1,2 @@
 /* research.js */
-PortfolioUtils.initPage('../');
+PortfolioUtils.initPage("../");

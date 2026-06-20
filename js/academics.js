@@ -1,2 +1,2 @@
 /* academics.js */
-PortfolioUtils.initPage('../');
+PortfolioUtils.initPage("../");
