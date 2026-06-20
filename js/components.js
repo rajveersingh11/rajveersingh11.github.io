@@ -6,7 +6,7 @@
 const CONFIG = {
   socials: {
     github: 'https://github.com/rajveersingh11',
-    linkedin: 'https://in.linkedin.com/in/rajveer-singh-403a5824a?trk=profile-badge',
+    linkedin: 'https://www.linkedin.com/in/rajveer-singh-403a5824a',
     email: 'rajveersinghshekhawat3234@gmail.com',
     phone: '+919521324077'
   }
